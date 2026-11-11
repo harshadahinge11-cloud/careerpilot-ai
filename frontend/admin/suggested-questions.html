@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggested Questions | CareerPilot AI</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 24px;
+            background: #0b0e1b;
+            color: #f1f5ff;
+            font-family: Arial, sans-serif;
+        }
+        h1 { font-size: 25px; margin: 0 0 8px; }
+        p { color: #9ba9c5; }
+        .panel {
+            background: #111629;
+            border: 1px solid #252d45;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: #090d19;
+            color: white;
+            border: 1px solid #343e59;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        button {
+            cursor: pointer;
+            padding: 10px 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #7357f5;
+            color: white;
+            margin: 4px;
+        }
+        button.secondary { background: #29334d; }
+        button.danger { background: #a9364b; }
+        .question {
+            border: 1px solid #29334d;
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow-wrap: anywhere;
+        }
+        .status { margin-top: 12px; font-size: 14px; }
+        .active { color: #62e6ae; }
+        .inactive { color: #ffb86c; }
+    </style>
+</head>
+<body>
+    <h1>Suggested Questions</h1>
+    <p>Manage the questions displayed in the AI Career Coach.</p>
+
+    <div class="panel">
+        <h3 id="formTitle">Add a suggested question</h3>
+        <input type="text" id="questionInput"
+               placeholder="Example: How can I start a cloud career?">
+        <button id="saveButton" onclick="saveQuestion()">Add Question</button>
+        <button class="secondary" onclick="resetForm()">Cancel</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <div class="panel">
+        <h3>Existing questions</h3>
+        <button onclick="loadQuestions()">Refresh List</button>
+        <div id="questionList">Loading questions...</div>
+    </div>
+
+<script>
+    const API_URL = "";
+    const ADMIN_KEY = "careerpilot-admin-2026";
+    let editingId = null;
+    let questions = [];
+
+    async function apiRequest(path, options = {}) {
+        const response = await fetch(API_URL + path, {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                "X-Admin-Key": ADMIN_KEY,
+                ...(options.headers || {})
+            }
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.detail || "Request failed. Check the backend.");
+        }
+        return data;
+    }
+
+    function showStatus(message, isError = false) {
+        const status = document.getElementById("status");
+        status.textContent = message;
+        status.style.color = isError ? "#ff8585" : "#62e6ae";
+    }
+
+    async function loadQuestions() {
+        const list = document.getElementById("questionList");
+        list.textContent = "Loading questions...";
+
+        try {
+            const data = await apiRequest("/admin/dashboard/suggested-questions");
+            questions = Array.isArray(data) ? data :
+                (data.questions || data.items || []);
+
+            if (!questions.length) {
+                list.textContent = "No questions found. Add your first question above.";
+                return;
+            }
+
+            list.replaceChildren();
+
+            questions.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "question";
+
+                const text = document.createElement("div");
+                text.textContent = item.question;
+
+                const state = document.createElement("p");
+                const isActive = Number(item.is_active) === 1;
+                state.textContent = isActive ? "Active" : "Inactive";
+                state.className = isActive ? "active" : "inactive";
+
+                const edit = document.createElement("button");
+                edit.textContent = "Edit";
+                edit.onclick = () => editQuestion(item);
+
+                const toggle = document.createElement("button");
+                toggle.className = "secondary";
+                toggle.textContent = isActive ? "Deactivate" : "Activate";
+                toggle.onclick = () => toggleQuestion(item);
+
+                const remove = document.createElement("button");
+                remove.className = "danger";
+                remove.textContent = "Delete";
+                remove.onclick = () => deleteQuestion(item);
+
+                card.append(text, state, edit, toggle, remove);
+                list.appendChild(card);
+            });
+        } catch (error) {
+            list.textContent = error.message;
+        }
+    }
+
+    async function saveQuestion() {
+        const question = document.getElementById("questionInput").value.trim();
+
+        if (!question) {
+            showStatus("Please enter a question.", true);
+            return;
+        }
+
+        try {
+            if (editingId === null) {
+                await apiRequest("/admin/dashboard/suggested-questions", {
+                    method: "POST",
+                    body: JSON.stringify({ question: question })
+                });
+                showStatus("Question added successfully.");
+            } else {
+                const existing = questions.find(item => item.id === editingId);
+                await apiRequest("/admin/dashboard/suggested-questions/" + editingId, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        question: question,
+                        is_active: existing ? Number(existing.is_active) : 1
+                    })
+                });
+                showStatus("Question updated successfully.");
+            }
+
+            resetForm(false);
+            await loadQuestions();
+        } catch (error) {
+            showStatus(error.message, true);
+        }
+    }
+
+    function editQuestion(item) {
+        editingId = item.id;
+        document.getElementById("questionInput").value = item.question;
+        document.getElementById("formTitle").textContent = "Edit suggested question";
+        document.getElementById("saveButton").textContent = "Save Changes";
+        showStatus("");
+    }
+
+    async function toggleQuestion(item) {
+        try {
+            await apiRequest("/admin/dashboard/suggested-questions/" + item.id, {
+                method: "PUT",
+                body: JSON.stringify({
+                    question: item.question,
+                    is_active: Number(item.is_active) === 1 ? 0 : 1
+                })
+            });
+            await loadQuestions();
+        } catch (error) {
+            showStatus(error.message, true);
+        }
+    }
+
+    async function deleteQuestion(item) {
+        if (!confirm("Delete this suggested question?")) return;
+
+        try {
+            await apiRequest("/admin/dashboard/suggested-questions/" + item.id, {
+                method: "DELETE"
+            });
+            showStatus("Question deleted.");
+            await loadQuestions();
+        } catch (error) {
+            showStatus(error.message, true);
+        }
+    }
+
+    function resetForm(clearStatus = true) {
+        editingId = null;
+        document.getElementById("questionInput").value = "";
+        document.getElementById("formTitle").textContent = "Add a suggested question";
+        document.getElementById("saveButton").textContent = "Add Question";
+        if (clearStatus) showStatus("");
+    }
+
+    loadQuestions();
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Resume Analyzer</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>Resume Analyzer</h1>
+                <div class="subtitle">CareerPilot AI · Admin Control Center</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            <button class="secondary" type="button" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Analyzed Resumes</h2>
+                <div class="subtitle" style="margin-top:7px">Resumes uploaded by students. View the details or delete a record.</div>
+            </div>
+            <span class="pill" id="count">0 records</span>
+        </div>
+        <div class="toolbar"><input id="search" type="search" placeholder="Search by student, email or file name..."></div>
+        <div id="list"><div class="empty">Loading...</div></div>
+    </section>
+
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+let all = [];
+function draw(items) {
+    $("count").textContent = items.length + " records";
+    CP.show($("list"), ["Student", "File", "Score (out of 100)", "Skills found", "Uploaded"],
+        items.map(r => ({ id: r.id, cells: [CP.person(r.user_name, r.user_email), r.filename || "-", r.resume_score,
+                                           (r.skills || []).length, CP.day(r.uploaded_at)] })),
+        { view: id => view(all.find(r => String(r.id) === id)), del: id => remove(all.find(r => String(r.id) === id)) },
+        { empty: "No resumes found." });
+}
+const run = CP.search("search", () => all, r => [r.user_name, r.user_email, r.filename].join(" "), draw);
+
+function view(r) {
+    CP.modal("Resume details",
+        CP.kv([["Student", r.user_name], ["Email", r.user_email], ["File", r.filename], ["Score (out of 100)", r.resume_score], ["Uploaded", r.uploaded_at]]) +
+        '<div class="label" style="margin-top:16px">Skills found in the resume</div>' +
+        CP.chips((r.skills || []).map(CP.skillName).filter(Boolean)));
+}
+async function remove(r) {
+    if (!confirm("Delete the resume \"" + r.filename + "\" of " + r.user_name + "?")) return;
+    try { await CP.del("/admin/dashboard/resumes/" + r.id); CP.say("Resume deleted.", "ok"); await load(); }
+    catch (e) { CP.say(e.message, "error"); }
+}
+async function load() {
+    try {
+        all = (await CP.get("/admin/dashboard/resumes")).resumes || [];
+        const scores = all.map(r => Number(r.resume_score) || 0);
+        CP.stats([["Total resumes", all.length], ["Students who uploaded", new Set(all.map(r => r.user_id)).size],
+                  ["Average score (out of 100)", scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0]]);
+        run();
+    } catch (e) { CP.say("Could not load resumes: " + e.message, "error"); $("list").innerHTML = ""; }
+}
+$("refreshBtn").onclick = load;
+load();
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI — Admin Login</title>
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="auth-page">
+<div class="auth-shell">
+  <div class="auth-brand">
+    <div class="brand-logo">CP</div>
+    <div>Career<span>Pilot</span><small>ADMIN CONSOLE</small></div>
+  </div>
+
+  <div class="auth-card">
+    <div class="eyebrow">SECURE ADMIN ACCESS</div>
+    <h1>Welcome back, Admin</h1>
+    <p class="sub">Sign in to manage career roles, skills and requirements.</p>
+
+    <form id="adminLoginForm">
+      <label>ADMIN EMAIL</label>
+      <input id="email" type="email" autocomplete="username" required placeholder="admin@example.com">
+
+      <label>ADMIN PASSWORD</label>
+      <div class="password-wrap">
+        <input id="password" type="password" autocomplete="current-password" required placeholder="Enter your password">
+        <button type="button" id="togglePassword">Show</button>
+      </div>
+
+      <button class="primary full" type="submit">Sign In to Admin Console</button>
+      <div id="adminMessage" class="message"></div>
+    </form>
+  </div>
+
+  <a class="back" href="../login.html">← Back to user login</a>
+</div>
+<script src="js/admin-login.js"></script>
+</body>
+</html>

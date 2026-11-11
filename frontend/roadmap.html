@@ -1,0 +1,1331 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Roadmap | CareerPilot AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background:
+                radial-gradient(circle at 80% 10%, rgba(124,58,237,.12), transparent 30%),
+                radial-gradient(circle at 60% 80%, rgba(37,99,235,.08), transparent 30%),
+                #070a15;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR - SAME AS RESUME
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 245px;
+            height: 100vh;
+
+            padding: 25px 16px;
+
+            background: rgba(7, 9, 18, .92);
+
+            border-right: 1px solid rgba(255, 255, 255, .07);
+
+            z-index: 1000;
+
+            backdrop-filter: blur(20px);
+
+            box-sizing: border-box;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 10px 30px;
+        }
+
+        .brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg,#8b5cf6,#38bdf8);
+            box-shadow: 0 0 25px rgba(139,92,246,.35);
+            font-size: 14px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .brand span {
+            display: block;
+            color: #f8fafc;
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -.4px;
+        }
+
+        .brand small {
+            display: block;
+            color: #707891;
+            font-size: 9px;
+            letter-spacing: 1.6px;
+            margin-top: 2px;
+        }
+
+        .nav-title {
+            color: #4f566d;
+            font-size: 9px;
+            letter-spacing: 1.8px;
+            font-weight: 700;
+            padding: 0 11px 9px;
+            text-transform: uppercase;
+        }
+
+        .account-title {
+            margin-top: 22px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav a {
+            height: 43px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            color: #858ca3;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 11px;
+            transition: .25s ease;
+            box-sizing: border-box;
+        }
+
+        .nav a:hover {
+            color: #fff;
+            background: rgba(255,255,255,.045);
+            transform: translateX(3px);
+        }
+
+        .nav a.active {
+            color: #fff;
+            background: linear-gradient(
+                90deg,
+                rgba(139,92,246,.18),
+                rgba(56,189,248,.07)
+            );
+            border: 1px solid rgba(139,92,246,.15);
+            box-shadow: inset 3px 0 0 #8b5cf6;
+        }
+
+        .nav a.active .nav-icon {
+            color: #a78bfa;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: currentColor;
+        }
+
+        .nav-icon svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .profile-mini {
+            padding: 13px;
+            border: 1px solid rgba(255,255,255,.07);
+            background: rgba(255,255,255,.025);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg,#8b5cf6,#22d3ee);
+            font-size: 10px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .profile-mini strong {
+            display: block;
+            font-size: 11px;
+            color: #fff;
+        }
+
+        .profile-mini span {
+            color: #707890;
+            font-size: 9px;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+            margin-left: 245px;
+            padding: 30px 38px 50px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .topbar h1 {
+            font-size: 26px;
+            font-weight: 650;
+            letter-spacing: -0.04em;
+        }
+
+        .topbar p {
+            color: #7f899d;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 20px;
+            color: #a7b0c1;
+            font-size: 11px;
+            letter-spacing: .08em;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34,197,94,.7);
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header {
+            padding: 28px 30px;
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,58,237,.12),
+                    rgba(37,99,235,.06)
+                );
+            border: 1px solid rgba(255,255,255,.07);
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            color: #a78bfa;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .16em;
+            margin-bottom: 10px;
+        }
+
+        .page-header h2 {
+            font-size: 30px;
+            letter-spacing: -.04em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #8993a8;
+            max-width: 680px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* =========================
+           ROLE BAR
+        ========================= */
+
+        .role-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
+            border-radius: 16px;
+            background: rgba(13,17,32,.82);
+            border: 1px solid rgba(255,255,255,.07);
+        }
+
+        .role-label {
+            color: #8d96aa;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .role-name {
+            font-size: 18px;
+            font-weight: 650;
+        }
+
+        .role-badge {
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: rgba(124,58,237,.13);
+            border: 1px solid rgba(124,58,237,.22);
+            color: #b9a4ff;
+            font-size: 11px;
+        }
+
+        /* =========================
+           ROADMAP
+        ========================= */
+
+        .roadmap-container {
+            position: relative;
+            padding: 28px;
+            border-radius: 20px;
+            background: rgba(10,14,27,.82);
+            border: 1px solid rgba(255,255,255,.07);
+        }
+
+        .roadmap-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .roadmap-subtitle {
+            color: #7f899d;
+            font-size: 12px;
+            margin-bottom: 28px;
+        }
+
+        .roadmap {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .roadmap::before {
+            content: "";
+            position: absolute;
+            left: 11px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background:
+                linear-gradient(
+                    180deg,
+                    #8b5cf6,
+                    #3b82f6,
+                    rgba(59,130,246,.12)
+                );
+        }
+
+        .roadmap-step {
+            position: relative;
+            display: flex;
+            gap: 20px;
+            padding: 0 0 26px;
+        }
+
+        .roadmap-step:last-child {
+            padding-bottom: 0;
+        }
+
+        .step-dot {
+            position: absolute;
+            left: -25px;
+            top: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #10152a;
+            border: 2px solid #7c3aed;
+            box-shadow: 0 0 18px rgba(124,58,237,.35);
+            z-index: 2;
+        }
+
+        .step-dot span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a78bfa;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 18px 20px;
+            border-radius: 15px;
+            background: rgba(255,255,255,.025);
+            border: 1px solid rgba(255,255,255,.065);
+            transition: .25s ease;
+        }
+
+        .step-content:hover {
+            transform: translateX(4px);
+            border-color: rgba(124,58,237,.25);
+            background: rgba(124,58,237,.045);
+        }
+
+        .step-number {
+            color: #8b5cf6;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            margin-bottom: 6px;
+        }
+
+        .step-content h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .step-content p {
+            color: #8993a8;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            padding: 6px 9px;
+            border-radius: 7px;
+            background: rgba(255,255,255,.045);
+            border: 1px solid rgba(255,255,255,.06);
+            color: #aeb7c8;
+            font-size: 10px;
+        }
+
+        /* =========================
+           INSIGHTS
+        ========================= */
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .insight-panel {
+            padding: 22px;
+            border-radius: 17px;
+            background: rgba(10,14,27,.82);
+            border: 1px solid rgba(255,255,255,.07);
+        }
+
+        .insight-panel h3 {
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill {
+            padding: 8px 11px;
+            border-radius: 8px;
+            background: rgba(124,58,237,.08);
+            border: 1px solid rgba(124,58,237,.15);
+            color: #b8a8df;
+            font-size: 11px;
+        }
+
+        .empty {
+            color: #727d92;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .resume-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .resume-link:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           ACTION
+        ========================= */
+
+        .bottom-action {
+            margin-top: 22px;
+            padding: 22px;
+            border-radius: 17px;
+            border: 1px solid rgba(124,58,237,.15);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,58,237,.09),
+                    rgba(37,99,235,.05)
+                );
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .bottom-action h3 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .bottom-action p {
+            color: #7f899d;
+            font-size: 12px;
+        }
+
+        .action-btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 17px;
+            background: linear-gradient(135deg,#7c3aed,#2563eb);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(37,99,235,.18);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        @media(max-width:900px) {
+
+            .sidebar {
+                width: 245px;
+            }
+
+            main {
+                margin-left: 245px;
+                padding: 24px;
+            }
+
+            .insight-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width:700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .topbar,
+            .role-section,
+            .bottom-action {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     SIDEBAR
+     SAME AS RESUME.HTML
+========================= -->
+
+<aside class="sidebar">
+
+    <!-- BRAND -->
+    <div class="brand">
+
+        <div class="brand-mark">CP</div>
+
+        <div>
+            <span>CareerPilot</span>
+            <small>AI CAREER INTELLIGENCE</small>
+        </div>
+
+    </div>
+
+    <!-- WORKSPACE -->
+    <div class="nav-title">
+        Workspace
+    </div>
+
+    <nav class="nav">
+
+        <a href="dashboard.html">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+            </span>
+
+            Dashboard
+
+        </a>
+
+
+        <a href="coach.html">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 5h16v11H8l-4 4z"></path>
+                    <path d="M8 9h8M8 12h5"></path>
+                </svg>
+            </span>
+
+            AI Career Coach
+
+        </a>
+
+
+        <a href="resume.html">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 3h9l3 3v15H6z"></path>
+                    <path d="M14 3v4h4M9 12h6M9 16h6"></path>
+                </svg>
+            </span>
+
+            Resume Analyzer
+
+        </a>
+
+
+        <a href="skill-gap.html">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 18V6M4 18h16"></path>
+                    <path d="M7 15l3-4 3 2 5-7"></path>
+                </svg>
+            </span>
+
+            Skill Gap Analyzer
+
+        </a>
+
+
+        <a href="roadmap.html" class="active">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="8"></circle>
+                    <path d="M12 7v5l3 2"></path>
+                </svg>
+            </span>
+
+            Career Roadmap
+
+        </a>
+
+
+        <a href="jobs.html">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M16 16l5 5"></path>
+                </svg>
+            </span>
+
+            Job Matching
+
+        </a>
+
+    </nav>
+
+
+    <!-- ACCOUNT -->
+    <div class="nav-title account-title">
+        Account
+    </div>
+
+    <nav class="nav">
+
+        <a href="profile.html">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="3"></circle>
+                    <path d="M5 20c1-4 4-6 7-6s6 2 7 6"></path>
+                </svg>
+            </span>
+
+            Profile
+
+        </a>
+
+
+        <a href="#" id="logoutBtn">
+
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 5H5v14h5"></path>
+                    <path d="M13 8l4 4-4 4M17 12H8"></path>
+                </svg>
+            </span>
+
+            Sign out
+
+        </a>
+
+    </nav>
+
+
+    <!-- USER PROFILE -->
+    <div class="sidebar-bottom">
+
+        <div class="profile-mini">
+
+            <div class="avatar" id="userAvatar">
+                U
+            </div>
+
+            <div>
+
+                <strong id="userFullName">
+                    User
+                </strong>
+
+                <span>
+                    CareerPilot Member
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main>
+
+    <div class="topbar">
+
+        <div>
+            <h1>Career Roadmap</h1>
+            <p>Your personalized path from current skills to career readiness.</p>
+        </div>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            AI SYSTEM READY
+        </div>
+
+    </div>
+
+
+    <!-- HEADER -->
+
+    <section class="page-header">
+
+        <div class="eyebrow">
+            CAREER INTELLIGENCE
+        </div>
+
+        <h2>Your path to the next level.</h2>
+
+        <p>
+            CareerPilot AI uses your resume analysis and skill-gap information
+            to organize the most important steps toward your target career.
+        </p>
+
+    </section>
+
+
+    <!-- ROLE -->
+
+    <section class="role-section">
+
+        <div>
+
+            <div class="role-label">
+                TARGET CAREER
+            </div>
+
+            <div class="role-name" id="targetRole">
+                Not selected
+            </div>
+
+        </div>
+
+        <div class="role-badge">
+            PERSONALIZED ROADMAP
+        </div>
+
+    </section>
+
+
+    <!-- ROADMAP -->
+
+    <section class="roadmap-container">
+
+        <h2 class="roadmap-title">
+            Your Career Journey
+        </h2>
+
+        <p class="roadmap-subtitle">
+            Follow these stages in order to build the skills required for your target role.
+        </p>
+
+
+        <div class="roadmap">
+
+            <div class="roadmap-step">
+
+                <div class="step-dot">
+                    <span></span>
+                </div>
+
+                <div class="step-content">
+
+                    <div class="step-number">
+                        STEP 01
+                    </div>
+
+                    <h3>Strengthen Your Current Skills</h3>
+
+                    <p>
+                        Review the skills already identified in your resume
+                        and strengthen the fundamentals before moving to advanced topics.
+                    </p>
+
+                    <div class="step-tags" id="currentSkills">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="roadmap-step">
+
+                <div class="step-dot">
+                    <span></span>
+                </div>
+
+                <div class="step-content">
+
+                    <div class="step-number">
+                        STEP 02
+                    </div>
+
+                    <h3>Close Your Skill Gaps</h3>
+
+                    <p>
+                        Focus first on the missing skills that have the highest
+                        importance for your selected career role.
+                    </p>
+
+                    <div class="step-tags" id="missingSkills">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="roadmap-step">
+
+                <div class="step-dot">
+                    <span></span>
+                </div>
+
+                <div class="step-content">
+
+                    <div class="step-number">
+                        STEP 03
+                    </div>
+
+                    <h3>Build Practical Projects</h3>
+
+                    <p>
+                        Apply your knowledge through realistic projects that
+                        demonstrate your ability to solve job-related problems.
+                    </p>
+
+                    <div class="step-tags">
+
+                        <span class="tag">Portfolio Project</span>
+                        <span class="tag">Real Dataset</span>
+                        <span class="tag">GitHub</span>
+                        <span class="tag">Documentation</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="roadmap-step">
+
+                <div class="step-dot">
+                    <span></span>
+                </div>
+
+                <div class="step-content">
+
+                    <div class="step-number">
+                        STEP 04
+                    </div>
+
+                    <h3>Prepare for Interviews</h3>
+
+                    <p>
+                        Practice technical concepts, role-specific questions,
+                        communication and real interview scenarios.
+                    </p>
+
+                    <div class="step-tags">
+
+                        <span class="tag">Technical Questions</span>
+                        <span class="tag">Mock Interview</span>
+                        <span class="tag">Communication</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="roadmap-step">
+
+                <div class="step-dot">
+                    <span></span>
+                </div>
+
+                <div class="step-content">
+
+                    <div class="step-number">
+                        STEP 05
+                    </div>
+
+                    <h3>Become Job Ready</h3>
+
+                    <p>
+                        Complete your resume, portfolio and projects,
+                        then begin applying to jobs that match your skills.
+                    </p>
+
+                    <div class="step-tags">
+
+                        <span class="tag">Resume</span>
+                        <span class="tag">LinkedIn</span>
+                        <span class="tag">Job Applications</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- INSIGHTS -->
+
+    <div class="insight-grid">
+
+        <section class="insight-panel">
+
+            <h3>Skills You Already Have</h3>
+
+            <div class="skill-list" id="skillsHave">
+
+                <span class="empty">
+                    Resume analysis data will appear here.
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <section class="insight-panel">
+
+            <h3>Priority Skills to Improve</h3>
+
+            <div class="skill-list" id="skillsNeed">
+
+                <span class="empty">
+                    Complete Skill Gap Analysis to identify priority skills.
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ACTION -->
+
+    <section class="bottom-action">
+
+        <div>
+
+            <h3>Ready for the next step?</h3>
+
+            <p>
+                Continue improving your profile with Job Matching and AI Career Coach.
+            </p>
+
+        </div>
+
+        <button class="action-btn" onclick="openJobs()">
+            Explore Job Matches
+        </button>
+
+    </section>
+
+</main>
+<script>
+const API_URL = "";
+const userId = localStorage.getItem("careerpilot_user_id");
+
+const userFullName = document.getElementById("userFullName");
+const userAvatar = document.getElementById("userAvatar");
+
+const targetRole = document.getElementById("targetRole");
+const currentSkills = document.getElementById("currentSkills");
+const missingSkills = document.getElementById("missingSkills");
+
+const skillsHave = document.getElementById("skillsHave");
+const skillsNeed = document.getElementById("skillsNeed");
+const logoutBtn = document.getElementById("logoutBtn");
+
+/* LOAD LOGGED-IN USER */
+
+async function loadLoggedInUser() {
+    const savedName = localStorage.getItem("careerpilot_name");
+
+    if (savedName) {
+        displayUserName(savedName);
+    }
+
+    if (!userId) return;
+
+    try {
+        const response = await fetch(`${API_URL}/users/${userId}`);
+
+        if (response.ok) {
+            const user = await response.json();
+
+            if (user.name) {
+                localStorage.setItem("careerpilot_name", user.name);
+                displayUserName(user.name);
+            }
+        }
+    } catch (error) {
+        console.error("Unable to load user name:", error);
+    }
+}
+
+function displayUserName(name) {
+    const fullName = (name || "User").trim();
+
+    if (userFullName) {
+        userFullName.textContent = fullName;
+    }
+
+    if (userAvatar) {
+        userAvatar.textContent = fullName
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(part => part[0].toUpperCase())
+            .join("") || "U";
+    }
+}
+
+/* CREATE SKILL TAGS SAFELY */
+
+function renderSkillTags(container, skills, emptyMessage) {
+    if (!container) return;
+
+    container.replaceChildren();
+
+    const cleanSkills = Array.isArray(skills)
+        ? skills.filter(skill => typeof skill === "string" && skill.trim())
+        : [];
+
+    if (!cleanSkills.length) {
+        const message = document.createElement("span");
+        message.className = "empty";
+        message.textContent = emptyMessage;
+        container.appendChild(message);
+        return;
+    }
+
+    cleanSkills.forEach(skill => {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = skill;
+        container.appendChild(tag);
+    });
+}
+
+/* LOAD ROADMAP */
+
+async function loadRoadmap() {
+    if (!userId) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+         const response = await fetch(`${API_URL}/roadmap/generate`, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        user_id: Number(userId)
+    })
+});
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Roadmap API error:", data);
+            showRoadmapMessage(
+                data.detail || "Unable to load your roadmap. Please complete Skill Gap Analysis."
+            );
+            return;
+        }
+
+        if (!data.roadmap) {
+            showRoadmapMessage(
+                "No roadmap is available yet. Please complete Skill Gap Analysis first."
+            );
+            return;
+        }
+
+        /*
+         * Support either response structure:
+         * { roadmap: { data: {...} } }
+         * or
+         * { roadmap: {...} }
+         */
+        const roadmap = data.roadmap.data || data.roadmap;
+
+        displayRoadmap(roadmap);
+
+    } catch (error) {
+        console.error("Roadmap loading error:", error);
+        showRoadmapMessage(
+            "Cannot connect to CareerPilot AI. Please make sure the backend is running."
+        );
+    }
+}
+
+/* SHOW MESSAGE */
+
+function showRoadmapMessage(message) {
+    if (targetRole) {
+        targetRole.textContent = message;
+    }
+
+    renderSkillTags(currentSkills, [], "No current skills available.");
+    renderSkillTags(missingSkills, [], "No missing skills available.");
+    renderSkillTags(skillsHave, [], "Complete your resume analysis first.");
+    renderSkillTags(skillsNeed, [], "Complete Skill Gap Analysis first.");
+}
+
+/* DISPLAY ROADMAP */
+
+ 
+function displayRoadmap(roadmap) {
+    if (!roadmap) {
+        showRoadmapMessage("No roadmap data was returned.");
+        return;
+    }
+
+    // Support different possible backend response field names
+    const roleName =
+        roadmap.role_name ||
+        roadmap.target_role ||
+        (typeof roadmap.role === "string"
+            ? roadmap.role
+            : roadmap.role?.name) ||
+        roadmap.title ||
+        "";
+
+    if (targetRole) {
+        targetRole.textContent = roleName || "Career not selected";
+    }
+
+    const have = Array.isArray(roadmap.skills_have)
+        ? roadmap.skills_have
+        : [];
+
+    const missing = Array.isArray(roadmap.skills_missing)
+        ? roadmap.skills_missing
+        : Array.isArray(roadmap.missing_skills)
+            ? roadmap.missing_skills
+            : [];
+
+    renderSkillTags(
+        currentSkills,
+        have,
+        "No current skills detected yet."
+    );
+
+    renderSkillTags(
+        missingSkills,
+        missing,
+        "No missing skills available yet."
+    );
+
+    renderSkillTags(
+        skillsHave,
+        have,
+        "No skills detected yet."
+    );
+
+    renderSkillTags(
+        skillsNeed,
+        missing,
+        "No priority skills available yet."
+    );
+}
+
+
+/* RENDER STAGES IF PRESENT */
+
+function renderStages(stages) {
+    if (!Array.isArray(stages)) return;
+
+    stages.forEach(stage => {
+        const card = document.querySelector(
+            `[data-stage="${stage.number}"]`
+        );
+
+        if (!card) return;
+
+        const title = card.querySelector(".stage-title");
+        const description = card.querySelector(".stage-description");
+
+        if (title) {
+            title.textContent = stage.title || "";
+        }
+
+        if (description) {
+            description.textContent = stage.description || "";
+        }
+    });
+}
+
+/* LOGOUT */
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        localStorage.removeItem("careerpilot_logged_in");
+        localStorage.removeItem("careerpilot_user_id");
+        localStorage.removeItem("careerpilot_name");
+        localStorage.removeItem("careerpilot_email");
+
+        window.location.href = "login.html";
+    });
+}
+
+/* OPEN JOB MATCHING */
+
+function openJobs() {
+    window.location.href = "jobs.html";
+}
+
+/* START */
+
+loadLoggedInUser();
+loadRoadmap();
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Admin Dashboard</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>Admin Dashboard</h1>
+                <div class="subtitle">CareerPilot AI · Welcome, <span id="adminName">Admin</span></div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="danger" id="logoutBtn" type="button">Log out</button><button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>AI Status</h2>
+                <div class="subtitle" style="margin-top:7px">The AI Coach, Resume feedback and Skill Gap tips use Google Gemini AI.</div>
+            </div>
+            
+        </div>
+        
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span id="aiText" class="pill">Checking...</span><button class="secondary" id="aiTestBtn" type="button">⚡ Test AI now</button></div>
+    </section>
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>All Modules</h2>
+                <div class="subtitle" style="margin-top:7px">Click Open to manage each part of the project.</div>
+            </div>
+            
+        </div>
+        
+        <div id="modules"><div class="empty">Loading...</div></div>
+    </section>
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Recent Activity</h2>
+                <div class="subtitle" style="margin-top:7px">The latest things students did.</div>
+            </div>
+            
+        </div>
+        
+        <div id="recent"><div class="empty">Loading...</div></div>
+    </section>
+
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+$("adminName").textContent = localStorage.getItem("careerpilot_admin_name") || "Admin";
+$("logoutBtn").onclick = () => {
+    if (!confirm("Log out of the admin panel?")) return;
+    localStorage.removeItem("careerpilot_admin_logged_in");
+    localStorage.removeItem("careerpilot_admin_key");
+    window.location.href = "login.html";
+};
+
+async function checkAI(test) {
+    const el = $("aiText");
+    try {
+        if (test) el.textContent = "Testing AI... please wait";
+        const d = await CP.get("/admin/dashboard/ai-status" + (test ? "?test=true" : ""));
+        if (!d.key_found) el.textContent = "❌ AI is not set up (API key missing)";
+        else if (!test) el.textContent = "AI key found. Press the button to test it.";
+        else if (d.working) el.textContent = "✅ AI is working (" + (d.model || "Gemini") + ")";
+        else el.textContent = "❌ AI is offline: " + (d.error || "no answer");
+    } catch (e) { el.textContent = "Could not check AI: " + e.message; }
+}
+$("aiTestBtn").onclick = () => checkAI(true);
+
+const TYPE = { resume: "Resume uploaded", chat: "Asked the AI Coach", skill_gap: "Skill gap analysis", roadmap: "Roadmap generated" };
+
+async function load() {
+    try {
+        const s = (await CP.get("/admin/dashboard/summary")).summary;
+        CP.stats([["Students", s.users], ["Resumes analyzed", s.resumes], ["AI Coach questions", s.chat_messages],
+                  ["Skill gap analyses", s.skill_gap_analyses], ["Roadmaps", s.roadmaps], ["Career roles", s.career_roles]]);
+
+        const mods = [
+            ["👥 Users", "See students, edit or delete them", s.users, "users.html"],
+            ["📄 Resumes", "See analyzed resumes and scores", s.resumes, "resume.html"],
+            ["🤖 AI Coach", "Read student questions and AI answers", s.chat_messages, "coach.html"],
+            ["🎯 Skill Gap", "Add or delete career roles, see analyses", s.skill_gap_analyses, "skill-gap.html"],
+            ["🗺️ Roadmaps", "See generated learning roadmaps", s.roadmaps, "roadmaps.html"],
+            ["💼 Job Matching", "See career roles and required skills", s.career_roles, "job-matching.html"],
+            ["📊 Reports", "Simple tables to print or save as PDF", "-", "reports.html"]
+        ];
+        $("modules").innerHTML = CP.table(["Module", "What you can do", "Records", ""],
+            mods.map(m => ({ cells: [{ html: '<div class="name">' + CP.esc(m[0]) + "</div>" }, m[1], m[2],
+                { html: '<button class="primary" type="button" onclick="location.href=\'' + m[3] + '\'">Open</button>' }] })),
+            { noActions: true });
+
+        $("recent").innerHTML = CP.table(["Student", "What happened", "Date"],
+            (s.recent_activity || []).slice(0, 8).map(a => ({ cells: [a.user_name, TYPE[a.type] || a.type, CP.day(a.date)] })),
+            { noActions: true, empty: "No activity yet." });
+    } catch (e) { CP.say("Could not load dashboard: " + e.message + " (is the backend running?)", "error"); }
+}
+$("refreshBtn").onclick = () => { load(); checkAI(false); };
+load(); checkAI(false);
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

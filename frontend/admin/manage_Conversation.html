@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage_conversation | CareerPilot Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 28px;
+            background: #0b1020;
+            color: #f1f5f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .muted {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .panel {
+            background: #141c30;
+            border: 1px solid #29344d;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 22px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #35415b;
+            background: #0b1020;
+            color: #fff;
+            font: inherit;
+        }
+
+        .toolbar input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            margin-top: 8px;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        button, .back-link {
+            padding: 11px 16px;
+            border: 0;
+            border-radius: 8px;
+            background: #7767f5;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button.secondary {
+            background: #29344d;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .message-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .conversation {
+            border: 1px solid #29344d;
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .conversation h3 {
+            margin: 0 0 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .conversation p {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.6;
+        }
+
+        .conversation button {
+            margin-top: 8px;
+        }
+
+        .status {
+            margin-top: 14px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <div>
+            <h1>AI Career Coach</h1>
+            <div class="muted">
+                Review and edit saved Career Coach conversations.
+            </div>
+        </div>
+        <a class="back-link" href="dashboard.html">← Admin Dashboard</a>
+    </div>
+
+    <div class="panel">
+        <h2>Conversation Management</h2>
+        <p class="muted">
+            Search saved questions, review AI responses, and edit existing records.
+        </p>
+
+        <div class="toolbar">
+            <input
+                id="searchInput"
+                type="search"
+                placeholder="Search by user, question, or response..."
+            >
+            <button id="searchButton" type="button">Search</button>
+            <button id="refreshButton" class="secondary" type="button">
+                Refresh
+            </button>
+        </div>
+
+        <div id="status" class="status muted" role="status">
+            Loading saved conversations...
+        </div>
+
+        <div id="messageList" class="message-list"></div>
+    </div>
+
+    <div id="editPanel" class="panel hidden">
+        <h2>Edit Conversation</h2>
+        <p class="muted" id="editMeta"></p>
+
+        <form id="editForm">
+            <label for="questionInput">User Question</label>
+            <textarea id="questionInput" required></textarea>
+
+            <label for="responseInput">AI Response</label>
+            <textarea id="responseInput" required></textarea>
+
+            <div class="toolbar" style="margin-top: 18px;">
+                <button id="saveButton" type="submit">Save Changes</button>
+                <button id="cancelButton" class="secondary" type="button">
+                    Cancel
+                </button>
+            </div>
+        </form>
+
+        <div id="editStatus" class="status muted" role="status"></div>
+    </div>
+
+</div>
+
+<script>
+    const API_BASE = "";
+
+    const statusBox = document.getElementById("status");
+    const messageList = document.getElementById("messageList");
+    const editPanel = document.getElementById("editPanel");
+    const editForm = document.getElementById("editForm");
+    const editStatus = document.getElementById("editStatus");
+    const saveButton = document.getElementById("saveButton");
+
+    let conversations = [];
+    let editingId = null;
+
+    function getAdminKey() {
+        return localStorage.getItem("careerpilot_admin_key") || "";
+    }
+
+    async function api(path, options = {}) {
+        const adminKey = getAdminKey();
+
+        if (!adminKey) {
+            throw new Error(
+                "Admin key not found. Please log in to the admin dashboard first."
+            );
+        }
+
+        const response = await fetch(API_BASE + path, {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": adminKey,
+                ...(options.headers || {})
+            }
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Request failed.");
+        }
+
+        return data;
+    }
+
+    function makeElement(tag, className, text) {
+        const element = document.createElement(tag);
+
+        if (className) {
+            element.className = className;
+        }
+
+        if (text !== undefined) {
+            element.textContent = text;
+        }
+
+        return element;
+    }
+
+    function renderConversations() {
+        messageList.replaceChildren();
+
+        if (!conversations.length) {
+            messageList.append(
+                makeElement(
+                    "p",
+                    "muted",
+                    "No saved conversations found."
+                )
+            );
+            return;
+        }
+
+        conversations.forEach(item => {
+            const card = makeElement("article", "conversation");
+
+            card.append(
+                makeElement(
+                    "div",
+                    "muted",
+                    "Conversation #" + item.id +
+                    " · " + (item.user_name || "Unknown user") +
+                    " · " + (item.created_at || "Date unavailable")
+                )
+            );
+
+            card.append(
+                makeElement("h3", "", "Question"),
+                makeElement("p", "", item.message || "")
+            );
+
+            card.append(
+                makeElement("h3", "", "AI Response"),
+                makeElement("p", "", item.response || "")
+            );
+
+            const editButton = makeElement("button", "", "Edit Conversation");
+
+            editButton.addEventListener("click", () => {
+                openEditor(item);
+            });
+
+            card.append(editButton);
+            messageList.append(card);
+        });
+    }
+
+    async function loadConversations() {
+        statusBox.textContent = "Loading conversations...";
+        messageList.replaceChildren();
+
+        try {
+            const search = document.getElementById("searchInput").value.trim();
+            const query = new URLSearchParams({ search });
+
+            const data = await api(
+                "/admin/dashboard/chat-messages?" + query.toString()
+            );
+
+            conversations = data.messages || [];
+            renderConversations();
+
+            statusBox.textContent =
+                "Found " + conversations.length + " saved conversation(s).";
+        } catch (error) {
+            statusBox.textContent = error.message;
+        }
+    }
+
+    function openEditor(item) {
+        editingId = item.id;
+
+        document.getElementById("editMeta").textContent =
+            "Editing conversation #" + item.id +
+            " · " + (item.user_name || "Unknown user");
+
+        document.getElementById("questionInput").value = item.message || "";
+        document.getElementById("responseInput").value = item.response || "";
+
+        editStatus.textContent = "";
+        editPanel.classList.remove("hidden");
+        editPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    editForm.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        if (editingId === null) {
+            return;
+        }
+
+        saveButton.disabled = true;
+        editStatus.textContent = "Saving changes...";
+
+        try {
+            await api(
+                "/admin/dashboard/chat-messages/" + editingId,
+                {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        message: document.getElementById("questionInput").value,
+                        response: document.getElementById("responseInput").value
+                    })
+                }
+            );
+
+            editStatus.textContent = "Conversation updated successfully.";
+            await loadConversations();
+        } catch (error) {
+            editStatus.textContent = error.message;
+        } finally {
+            saveButton.disabled = false;
+        }
+    });
+
+    document.getElementById("cancelButton").addEventListener("click", () => {
+        editingId = null;
+        editPanel.classList.add("hidden");
+    });
+
+    document.getElementById("searchButton").addEventListener(
+        "click",
+        loadConversations
+    );
+
+    document.getElementById("refreshButton").addEventListener(
+        "click",
+        loadConversations
+    );
+
+    document.getElementById("searchInput").addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            loadConversations();
+        }
+    });
+
+    loadConversations();
+</script>
+</body>
+</html>

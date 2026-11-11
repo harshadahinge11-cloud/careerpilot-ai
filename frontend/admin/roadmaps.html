@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Career Roadmaps</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>Career Roadmaps</h1>
+                <div class="subtitle">Learning roadmaps generated for students</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            <button class="secondary" type="button" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Generated Roadmaps</h2>
+                <div class="subtitle" style="margin-top:7px">View the stages of a roadmap or delete it.</div>
+            </div>
+            <span class="pill" id="count">0 records</span>
+        </div>
+        <div class="toolbar"><input id="search" type="search" placeholder="Search by student, email or career..."></div>
+        <div id="list"><div class="empty">Loading...</div></div>
+    </section>
+
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+let all = [];
+function draw(items) {
+    $("count").textContent = items.length + " records";
+    CP.show($("list"), ["Student", "Career", "Match score (out of 100)", "Stages", "Missing skills", "Created"],
+        items.map(r => ({ id: r.id, cells: [CP.person(r.user_name, r.user_email), r.role_name || "-", r.match_score, r.stage_count, r.missing_count, CP.day(r.created_at)] })),
+        { view: id => view(all.find(r => String(r.id) === id)), del: id => remove(all.find(r => String(r.id) === id)) },
+        { empty: "No roadmaps found." });
+}
+const run = CP.search("search", () => all, r => [r.user_name, r.user_email, r.role_name].join(" "), draw);
+
+function view(r) {
+    CP.modal("Roadmap: " + (r.user_name || "Student") + " → " + (r.role_name || ""),
+        CP.kv([["Student", r.user_name], ["Career", r.role_name], ["Match score (out of 100)", r.match_score], ["Created", r.created_at]]) +
+        '<div class="label" style="margin-top:16px">Stages</div>' +
+        CP.table(["Stage", "What the student should do"], (r.stages || []).map((s, i) => ({ cells: [(i + 1) + ". " + s.title, s.description] })),
+                 { noActions: true, empty: "No stages saved." }));
+}
+async function remove(r) {
+    if (!confirm("Delete the roadmap of " + r.user_name + " for " + r.role_name + "?")) return;
+    try { await CP.del("/admin/dashboard/roadmaps/" + r.id); CP.say("Roadmap deleted.", "ok"); await load(); }
+    catch (e) { CP.say(e.message, "error"); }
+}
+async function load() {
+    try {
+        all = (await CP.get("/admin/dashboard/roadmaps")).roadmaps || [];
+        CP.stats([["Total roadmaps", all.length], ["Students with a roadmap", new Set(all.map(r => r.user_id)).size],
+                  ["Careers covered", new Set(all.map(r => r.role_name)).size]]);
+        run();
+    } catch (e) { CP.say("Could not load roadmaps: " + e.message, "error"); $("list").innerHTML = ""; }
+}
+$("refreshBtn").onclick = load;
+load();
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

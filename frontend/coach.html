@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Career Coach | CareerPilot AI</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#060713;
+    --panel:#101225;
+    --panel2:#15182d;
+    --border:rgba(255,255,255,.09);
+    --text:#f5f7ff;
+    --muted:#858ba8;
+    --purple:#8b5cf6;
+    --blue:#4f8cff;
+    --cyan:#35d8ff;
+    --green:#48e0a4;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 72% 20%,rgba(102,75,255,.14),transparent 28%),
+        radial-gradient(circle at 20% 85%,rgba(0,185,255,.07),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.2;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:55px 55px;
+}
+
+
+/* =========================================================
+   SIDEBAR - SAME AS DASHBOARD
+   ========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:245px;
+    height:100vh;
+    padding:25px 16px;
+    background:rgba(7,9,18,.92);
+    border-right:1px solid var(--border);
+    z-index:100;
+    backdrop-filter:blur(20px);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 10px 30px;
+}
+
+.brand-mark{
+    width:36px;
+    height:36px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#8b5cf6,#38bdf8);
+    box-shadow:0 0 25px rgba(139,92,246,.35);
+    font-size:14px;
+    font-weight:800;
+}
+
+.brand span{
+    font-size:17px;
+    font-weight:800;
+    letter-spacing:-.4px;
+}
+
+.brand small{
+    display:block;
+    color:#707891;
+    font-size:9px;
+    letter-spacing:1.6px;
+    margin-top:2px;
+}
+
+.nav-title{
+    color:#4f566d;
+    font-size:9px;
+    letter-spacing:1.8px;
+    font-weight:700;
+    padding:0 11px 9px;
+    text-transform:uppercase;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.nav a{
+    height:43px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 12px;
+    color:#858ca3;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:600;
+    border-radius:11px;
+    transition:.25s ease;
+}
+
+.nav a svg{
+    width:17px;
+    height:17px;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:1.8;
+    flex-shrink:0;
+}
+
+.nav a:hover{
+    color:#fff;
+    background:rgba(255,255,255,.045);
+    transform:translateX(3px);
+}
+
+.nav a.active{
+    color:#fff;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(139,92,246,.18),
+            rgba(56,189,248,.07)
+        );
+    border:1px solid rgba(139,92,246,.15);
+    box-shadow:inset 3px 0 0 #8b5cf6;
+}
+
+.sidebar-bottom{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:20px;
+}
+
+.profile-mini{
+    padding:13px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.025);
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#8b5cf6,#22d3ee);
+    font-size:10px;
+    font-weight:800;
+}
+
+.profile-mini strong{
+    display:block;
+    font-size:11px;
+}
+
+.profile-mini span{
+    color:#707890;
+    font-size:9px;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main{
+    margin-left:245px;
+    min-height:100vh;
+    padding:32px 42px 50px;
+    position:relative;
+    z-index:2;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.eyebrow{
+    color:#907bff;
+    font-size:10px;
+    letter-spacing:2.5px;
+    font-weight:700;
+    margin-bottom:9px;
+}
+
+h1{
+    font-size:40px;
+    letter-spacing:-1.5px;
+}
+
+.top-status{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 13px;
+    border-radius:30px;
+    background:rgba(72,224,164,.06);
+    border:1px solid rgba(72,224,164,.14);
+    color:#8eecc5;
+    font-size:11px;
+}
+
+.live{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#48e0a4;
+    box-shadow:0 0 12px #48e0a4;
+}
+
+
+/* =========================================================
+   COMMAND
+   ========================================================= */
+
+.command{
+    display:grid;
+    grid-template-columns:1fr 330px;
+    gap:18px;
+}
+
+
+/* =========================================================
+   AI SCENE
+   ========================================================= */
+
+.scene{
+    min-height:620px;
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    border:1px solid var(--border);
+    background:
+        radial-gradient(circle at 50% 45%,rgba(107,80,255,.14),transparent 30%),
+        linear-gradient(145deg,#11142b,#080a18);
+}
+
+.scene-grid{
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:44px 44px;
+}
+
+.scene-title{
+    position:absolute;
+    top:27px;
+    left:30px;
+    z-index:5;
+}
+
+.scene-title small{
+    color:#626981;
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+.scene-title strong{
+    display:block;
+    margin-top:7px;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   CENTRAL GRADUATE
+   ========================================================= */
+
+.person{
+    position:absolute;
+    left:50%;
+    top:52%;
+    width:270px;
+    height:440px;
+    transform:translate(-50%,-50%);
+    z-index:5;
+    animation:breathe 4s ease-in-out infinite;
+}
+
+.person svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
+}
+
+.head{
+    transform-origin:center;
+    animation:headMove 7s ease-in-out infinite;
+}
+
+.eye{
+    animation:blink 5s infinite;
+}
+
+.cap{
+    transform-origin:122px 72px;
+    animation:capMove 7s ease-in-out infinite;
+}
+
+.tassel{
+    transform-origin:165px 65px;
+    animation:tasselMove 3s ease-in-out infinite;
+}
+
+@keyframes breathe{
+    0%,100%{
+        transform:translate(-50%,-50%) translateY(0);
+    }
+
+    50%{
+        transform:translate(-50%,-50%) translateY(-7px);
+    }
+}
+
+@keyframes headMove{
+    0%,100%{
+        transform:rotate(0);
+    }
+
+    50%{
+        transform:rotate(-1deg);
+    }
+}
+
+@keyframes blink{
+    0%,46%,49%,100%{
+        transform:scaleY(1);
+    }
+
+    47%,48%{
+        transform:scaleY(.08);
+    }
+}
+
+@keyframes capMove{
+    0%,100%{
+        transform:rotate(0deg);
+    }
+
+    50%{
+        transform:rotate(-1deg);
+    }
+}
+
+@keyframes tasselMove{
+    0%,100%{
+        transform:rotate(0deg);
+    }
+
+    50%{
+        transform:rotate(8deg);
+    }
+}
+
+
+/* =========================================================
+   SCAN RING
+   ========================================================= */
+
+.scan{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:380px;
+    height:380px;
+    transform:translate(-50%,-50%);
+    border:1px solid rgba(126,98,255,.16);
+    border-radius:50%;
+    box-shadow:
+        0 0 70px rgba(83,66,255,.08),
+        inset 0 0 60px rgba(83,66,255,.04);
+    animation:rotate 18s linear infinite;
+}
+
+.scan:before{
+    content:"";
+    position:absolute;
+    inset:24px;
+    border:1px dashed rgba(53,216,255,.12);
+    border-radius:50%;
+}
+
+.scan:after{
+    content:"";
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#64a5ff;
+    box-shadow:0 0 20px #64a5ff;
+    top:12px;
+    left:50%;
+}
+
+@keyframes rotate{
+    from{
+        transform:translate(-50%,-50%) rotate(0);
+    }
+
+    to{
+        transform:translate(-50%,-50%) rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   INFORMATION
+   ========================================================= */
+
+.info{
+    position:absolute;
+    width:180px;
+    padding:14px;
+    background:rgba(12,14,30,.88);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:15px;
+    backdrop-filter:blur(15px);
+    z-index:8;
+}
+
+.info small{
+    color:#626a84;
+    font-size:8px;
+    letter-spacing:1.6px;
+}
+
+.info h3{
+    margin-top:6px;
+    font-size:13px;
+}
+
+.info p{
+    margin-top:5px;
+    color:#777e99;
+    font-size:9px;
+    line-height:1.5;
+}
+
+.info.a{
+    left:25px;
+    top:115px;
+    animation:infoFloat 4s ease-in-out infinite;
+}
+
+.info.b{
+    right:25px;
+    top:135px;
+    animation:infoFloat 4s ease-in-out infinite -1s;
+}
+
+.info.c{
+    left:45px;
+    bottom:115px;
+    animation:infoFloat 4s ease-in-out infinite -2s;
+}
+
+.info.d{
+    right:45px;
+    bottom:100px;
+    animation:infoFloat 4s ease-in-out infinite -3s;
+}
+
+@keyframes infoFloat{
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+}
+
+.connection{
+    position:absolute;
+    height:1px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(128,102,255,.3),
+        transparent
+    );
+    z-index:2;
+}
+
+.c1{
+    width:190px;
+    left:190px;
+    top:190px;
+    transform:rotate(20deg);
+}
+
+.c2{
+    width:190px;
+    right:190px;
+    top:205px;
+    transform:rotate(160deg);
+}
+
+.c3{
+    width:180px;
+    left:205px;
+    bottom:190px;
+    transform:rotate(-20deg);
+}
+
+.c4{
+    width:180px;
+    right:205px;
+    bottom:175px;
+    transform:rotate(200deg);
+}
+
+
+/* =========================================================
+   TALK
+   ========================================================= */
+
+.talk{
+    position:absolute;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:10;
+}
+
+.talk button{
+    padding:14px 25px;
+    border:1px solid rgba(151,126,255,.5);
+    border-radius:13px;
+    background:linear-gradient(135deg,#7958e9,#416de8);
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 10px 35px rgba(88,71,235,.3);
+}
+
+
+/* =========================================================
+   QUESTION PANEL
+   ========================================================= */
+
+.question-panel{
+    border:1px solid var(--border);
+    border-radius:24px;
+    background:rgba(12,14,29,.84);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    max-height:620px;
+}
+
+.question-head{
+    margin-bottom:17px;
+}
+
+.question-head small{
+    color:#686f89;
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+.question-head h2{
+    margin-top:7px;
+    font-size:18px;
+}
+
+.question-head p{
+    color:#707792;
+    font-size:10px;
+    line-height:1.5;
+    margin-top:6px;
+}
+
+.categories{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:15px;
+}
+
+.category{
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.025);
+    color:#8a91aa;
+    padding:7px 9px;
+    border-radius:8px;
+    font-size:9px;
+    cursor:pointer;
+}
+
+.category.active,
+.category:hover{
+    color:white;
+    border-color:rgba(139,92,246,.4);
+    background:rgba(139,92,246,.09);
+}
+
+.questions{
+    overflow-y:auto;
+    padding-right:4px;
+}
+
+.question{
+    width:100%;
+    text-align:left;
+    border:1px solid rgba(255,255,255,.065);
+    background:rgba(255,255,255,.025);
+    color:#aeb3c7;
+    padding:12px;
+    border-radius:11px;
+    margin-bottom:8px;
+    cursor:pointer;
+    font-size:10px;
+    line-height:1.4;
+    transition:.2s;
+}
+
+.question:hover{
+    color:white;
+    transform:translateX(3px);
+    border-color:rgba(139,92,246,.3);
+    background:rgba(139,92,246,.06);
+}
+
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+.chat-panel{
+    position:fixed;
+    right:25px;
+    top:25px;
+    bottom:25px;
+    width:410px;
+    background:rgba(8,9,20,.97);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:24px;
+    z-index:50;
+    transform:translateX(120%);
+    transition:.45s cubic-bezier(.77,0,.18,1);
+    box-shadow:-20px 0 80px rgba(0,0,0,.5);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+.chat-panel.open{
+    transform:translateX(0);
+}
+
+.chat-head{
+    padding:19px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.chat-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.ai-icon{
+    width:33px;
+    height:33px;
+    border-radius:10px;
+    background:linear-gradient(135deg,#8b5cf6,#3b82f6);
+    box-shadow:0 0 20px rgba(124,92,246,.35);
+}
+
+.chat-title strong{
+    font-size:13px;
+}
+
+.chat-title small{
+    display:block;
+    color:#6f7590;
+    font-size:8px;
+    margin-top:3px;
+}
+
+.close{
+    width:30px;
+    height:30px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:#8a90a5;
+    border-radius:9px;
+    cursor:pointer;
+}
+
+.conversation-status{
+    padding:9px 18px;
+    background:rgba(139,92,246,.04);
+    border-bottom:1px solid rgba(255,255,255,.04);
+    color:#747b95;
+    font-size:9px;
+}
+
+.messages{
+    flex:1;
+    overflow-y:auto;
+    padding:18px;
+}
+
+.message{
+    max-width:88%;
+    padding:11px 13px;
+    border-radius:13px;
+    margin-bottom:10px;
+    font-size:10px;
+    line-height:1.6;
+    white-space:pre-wrap;
+}
+
+.message.ai{
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.055);
+    color:#c4c8d8;
+}
+
+.message.user{
+    margin-left:auto;
+    background:linear-gradient(135deg,#6448ca,#3f67ca);
+    color:white;
+}
+
+.quick{
+    padding:10px 16px;
+    border-top:1px solid rgba(255,255,255,.05);
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+}
+
+.quick button{
+    flex-shrink:0;
+    border:1px solid rgba(255,255,255,.07);
+    background:rgba(255,255,255,.025);
+    color:#858ca5;
+    padding:7px 9px;
+    border-radius:8px;
+    font-size:8px;
+    cursor:pointer;
+}
+
+.quick button:hover{
+    color:white;
+    border-color:rgba(139,92,246,.35);
+}
+
+.quick button.active{
+    color:white;
+    border-color:rgba(139,92,246,.4);
+    background:rgba(139,92,246,.09);
+}
+
+.ask-box{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.ask-box textarea{
+    width:100%;
+    min-height:150px;
+    resize:vertical;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
+    color:white;
+    outline:none;
+    font-family:inherit;
+    font-size:11px;
+    line-height:1.6;
+}
+
+.ask-box textarea:focus{
+    border-color:rgba(139,92,246,.5);
+}
+
+.ask-topic{
+    font-size:9px;
+    color:#8a91aa;
+}
+
+.ask-btn{
+    border:0;
+    padding:13px;
+    border-radius:11px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:11px;
+    color:white;
+    background:linear-gradient(135deg,#6448ca,#3f67ca);
+}
+
+.chat-input{
+    padding:13px;
+    border-top:1px solid var(--border);
+    display:flex;
+    gap:8px;
+}
+
+.chat-input input{
+    flex:1;
+    min-width:0;
+    padding:12px;
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
+    color:white;
+    outline:none;
+    font-size:10px;
+}
+
+.send{
+    width:43px;
+    border:0;
+    border-radius:11px;
+    background:linear-gradient(135deg,#7958e9,#416de8);
+    color:white;
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   BOTTOM
+   ========================================================= */
+
+.bottom{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:17px;
+}
+
+.bottom-card{
+    padding:18px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:rgba(15,17,34,.7);
+}
+
+.bottom-card small{
+    color:#626982;
+    font-size:8px;
+    letter-spacing:1.6px;
+}
+
+.bottom-card h3{
+    margin-top:10px;
+    font-size:16px;
+}
+
+.bottom-card p{
+    color:#747b94;
+    font-size:10px;
+    line-height:1.5;
+    margin-top:7px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1050px){
+
+    .sidebar{
+        width:75px;
+    }
+
+    .brand span,
+    .brand small,
+    .nav-title,
+    .nav a span{
+        display:none;
+    }
+
+    .brand{
+        justify-content:center;
+        padding-left:0;
+        padding-right:0;
+    }
+
+    .nav a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:75px;
+    }
+
+    .command{
+        grid-template-columns:1fr;
+    }
+
+    .question-panel{
+        max-height:none;
+    }
+
+    .questions{
+        max-height:250px;
+    }
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        padding:20px 13px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+    .top-status{
+        display:none;
+    }
+
+    .scene{
+        min-height:650px;
+    }
+
+    .person{
+        transform:translate(-50%,-50%) scale(.78);
+    }
+
+    .scan{
+        width:300px;
+        height:300px;
+    }
+
+    .info{
+        width:140px;
+    }
+
+    .info h3{
+        font-size:11px;
+    }
+
+    .info p{
+        font-size:8px;
+    }
+
+    .info.a{
+        left:10px;
+    }
+
+    .info.b{
+        right:10px;
+    }
+
+    .info.c{
+        left:10px;
+    }
+
+    .info.d{
+        right:10px;
+    }
+
+    .bottom{
+        grid-template-columns:1fr;
+    }
+
+    .chat-panel{
+        left:8px;
+        right:8px;
+        top:8px;
+        bottom:8px;
+        width:auto;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+     SAME STRUCTURE AS DASHBOARD
+     ========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            CP
+        </div>
+
+        <div>
+            <span>CareerPilot</span>
+            <small>AI CAREER INTELLIGENCE</small>
+        </div>
+
+    </div>
+
+
+    <div class="nav-title">
+        Workspace
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="dashboard.html">
+
+            <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+            </svg>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="coach.html" class="active">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M4 5h16v11H8l-4 4z"></path>
+                <path d="M8 9h8M8 12h5"></path>
+            </svg>
+
+            <span>AI Career Coach</span>
+
+        </a>
+
+
+        <a href="resume.html">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M6 3h9l3 3v15H6z"></path>
+                <path d="M14 3v4h4M9 12h6M9 16h6"></path>
+            </svg>
+
+            <span>Resume Analyzer</span>
+
+        </a>
+
+
+        <a href="skill-gap.html">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M4 18V6M4 18h16"></path>
+                <path d="M7 15l3-4 3 2 5-7"></path>
+            </svg>
+
+            <span>Skill Gap Analyzer</span>
+
+        </a>
+
+
+        <a href="roadmap.html">
+
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8"></circle>
+                <path d="M12 7v5l3 2"></path>
+            </svg>
+
+            <span>Career Roadmap</span>
+
+        </a>
+
+
+        <a href="jobs.html">
+
+            <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="M16 16l5 5"></path>
+            </svg>
+
+            <span>Job Matching</span>
+
+        </a>
+
+    </nav>
+
+
+    <div
+        class="nav-title"
+        style="margin-top:22px;">
+
+        Account
+
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="profile.html">
+
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="3"></circle>
+                <path d="M5 20c1-4 4-6 7-6s6 2 7 6"></path>
+            </svg>
+
+            <span>Profile</span>
+
+        </a>
+
+
+        <a href="#" id="logoutBtn">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M10 5H5v14h5"></path>
+                <path d="M13 8l4 4-4 4M17 12H8"></path>
+            </svg>
+
+            <span>Sign out</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="profile-mini">
+
+            <div
+                class="avatar"
+                id="userAvatar">
+
+                U
+
+            </div>
+
+
+            <div>
+
+                <strong id="userFullName">
+                    User
+                </strong>
+
+                <span>
+                    CareerPilot Member
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <div class="eyebrow">
+                PERSONAL AI CAREER COACH
+            </div>
+
+            <h1>
+                Let's build your next move.
+            </h1>
+
+        </div>
+
+        <div class="top-status">
+
+            <i class="live"></i>
+
+            CareerPilot AI online
+
+        </div>
+
+    </div>
+
+
+    <section class="command">
+
+
+        <!-- CENTRAL AI CAREER SCENE -->
+
+        <div class="scene">
+
+            <div class="scene-grid"></div>
+
+
+            <div class="scene-title">
+
+                <small>
+                    CAREER INTELLIGENCE ENGINE
+                </small>
+
+                <strong id="userLabel">
+                    PERSONALIZED ANALYSIS
+                </strong>
+
+            </div>
+
+
+            <div class="connection c1"></div>
+            <div class="connection c2"></div>
+            <div class="connection c3"></div>
+            <div class="connection c4"></div>
+
+
+            <div class="scan"></div>
+
+
+            <!-- CENTRAL CONVOCATION PERSON -->
+
+            <div class="person">
+
+                <svg viewBox="0 0 270 440">
+
+                    <ellipse
+                        cx="135"
+                        cy="418"
+                        rx="68"
+                        ry="12"
+                        fill="rgba(0,0,0,.45)"
+                    />
+
+
+                    <path
+                        d="
+                        M82 205
+                        Q90 181 112 174
+                        L135 168
+                        L158 174
+                        Q180 181 188 205
+
+                        L216 394
+
+                        L54 394
+
+                        Z
+                        "
+                        fill="#101321"
+                        stroke="#626d9f"
+                        stroke-width="1.2"
+                    />
+
+
+                    <path
+                        d="
+                        M108 179
+                        L135 218
+                        L103 394
+                        L58 394
+                        L80 215
+                        Z
+                        "
+                        fill="#171c32"
+                    />
+
+
+                    <path
+                        d="
+                        M162 179
+                        L135 218
+                        L167 394
+                        L212 394
+                        L190 215
+                        Z
+                        "
+                        fill="#13182b"
+                    />
+
+
+                    <path
+                        d="
+                        M108 180
+                        L135 218
+                        L162 180
+                        L153 174
+                        L135 168
+                        L117 174
+                        Z
+                        "
+                        fill="#0b0e1c"
+                    />
+
+
+                    <path
+                        d="
+                        M112 177
+                        L135 215
+                        L158 177
+                        L150 171
+                        L135 181
+                        L120 171
+                        Z
+                        "
+                        fill="#f0f1f7"
+                    />
+
+
+                    <path
+                        d="
+                        M113 181
+                        L125 207
+                        L112 335
+                        L128 360
+                        L136 225
+                        L144 360
+                        L160 335
+                        L147 207
+                        L157 181
+                        L149 175
+                        L135 214
+                        L121 175
+                        Z
+                        "
+                        fill="#5f4dd8"
+                    />
+
+
+                    <path
+                        d="
+                        M121 182
+                        L128 207
+                        L119 332
+                        L126 344
+                        L135 219
+                        Z
+                        "
+                        fill="#806cf0"
+                        opacity=".75"
+                    />
+
+
+                    <path
+                        d="
+                        M117 160
+                        L117 188
+                        Q135 201 153 188
+                        L153 160
+                        Z
+                        "
+                        fill="#b97d66"
+                    />
+
+
+                    <g class="head">
+
+                        <ellipse
+                            cx="86"
+                            cy="126"
+                            rx="9"
+                            ry="14"
+                            fill="#b77b65"
+                        />
+
+                        <ellipse
+                            cx="184"
+                            cy="126"
+                            rx="9"
+                            ry="14"
+                            fill="#b77b65"
+                        />
+
+
+                        <ellipse
+                            cx="135"
+                            cy="121"
+                            rx="49"
+                            ry="58"
+                            fill="#c58a70"
+                        />
+
+
+                        <path
+                            d="
+                            M88 119
+                            Q84 67
+                            135 60
+                            Q186 67
+                            182 119
+
+                            L171 98
+
+                            Q161 79
+                            135 82
+
+                            Q108 80
+                            96 101
+
+                            Z
+                            "
+                            fill="#171522"
+                        />
+
+
+                        <path
+                            d="
+                            M88 106
+                            Q84 128 91 148
+                            L99 137
+                            L99 103
+                            Z
+                            "
+                            fill="#171522"
+                        />
+
+
+                        <path
+                            d="
+                            M182 106
+                            Q186 128 179 148
+                            L171 137
+                            L171 103
+                            Z
+                            "
+                            fill="#171522"
+                        />
+
+
+                        <ellipse
+                            class="eye"
+                            cx="117"
+                            cy="123"
+                            rx="3.2"
+                            ry="4"
+                            fill="#151522"
+                        />
+
+                        <ellipse
+                            class="eye"
+                            cx="153"
+                            cy="123"
+                            rx="3.2"
+                            ry="4"
+                            fill="#151522"
+                        />
+
+
+                        <path
+                            d="M107 111 Q117 106 126 111"
+                            fill="none"
+                            stroke="#382b31"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M144 111 Q153 106 163 111"
+                            fill="none"
+                            stroke="#382b31"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                        />
+
+
+                        <path
+                            d="
+                            M135 125
+                            L130 143
+                            L137 145
+                            "
+                            fill="none"
+                            stroke="#955f51"
+                            stroke-width="2"
+                        />
+
+
+                        <path
+                            d="
+                            M123 154
+                            Q135 162
+                            147 154
+                            "
+                            fill="none"
+                            stroke="#743f40"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                    </g>
+
+
+                    <g class="cap">
+
+                        <polygon
+                            points="
+                            74,70
+                            135,48
+                            196,70
+                            135,93
+                            "
+                            fill="#0c0f1d"
+                            stroke="#6974aa"
+                            stroke-width="1.3"
+                        />
+
+
+                        <polygon
+                            points="
+                            86,70
+                            135,53
+                            184,70
+                            135,87
+                            "
+                            fill="#151a2d"
+                        />
+
+
+                        <path
+                            d="
+                            M94 77
+                            Q135 94 176 77
+                            L173 94
+                            Q135 110 97 94
+                            Z
+                            "
+                            fill="#0b0e1a"
+                            stroke="#606b9e"
+                            stroke-width="1"
+                        />
+
+
+                        <path
+                            d="
+                            M100 83
+                            Q135 98 170 83
+                            L170 91
+                            Q135 106 100 91
+                            Z
+                            "
+                            fill="#171b30"
+                        />
+
+                    </g>
+
+
+                    <g class="tassel">
+
+                        <path
+                            d="
+                            M183 68
+                            Q191 87
+                            187 107
+                            "
+                            fill="none"
+                            stroke="#9b82ff"
+                            stroke-width="2"
+                        />
+
+
+                        <circle
+                            cx="187"
+                            cy="109"
+                            r="5"
+                            fill="#8069ed"
+                        />
+
+
+                        <path
+                            d="M181 111V129"
+                            stroke="#a18cff"
+                            stroke-width="2"
+                        />
+
+                        <path
+                            d="M185 111V132"
+                            stroke="#8069ed"
+                            stroke-width="2"
+                        />
+
+                        <path
+                            d="M189 111V129"
+                            stroke="#a18cff"
+                            stroke-width="2"
+                        />
+
+                        <path
+                            d="M193 111V127"
+                            stroke="#8069ed"
+                            stroke-width="2"
+                        />
+
+                    </g>
+
+
+                    <path
+                        d="
+                        M82 207
+                        Q58 215 50 256
+                        L35 354
+                        Q33 368 46 373
+                        Q59 377 65 362
+                        L91 271
+                        Z
+                        "
+                        fill="#11172c"
+                        stroke="#5d6798"
+                        stroke-width="1"
+                    />
+
+
+                    <path
+                        d="
+                        M73 225
+                        Q61 245 57 274
+                        L43 354
+                        Q41 363 48 365
+                        Q54 367 57 359
+                        L84 267
+                        Z
+                        "
+                        fill="#1a2038"
+                    />
+
+
+                    <path
+                        d="
+                        M188 207
+                        Q212 215 220 256
+                        L235 354
+                        Q237 368 224 373
+                        Q211 377 205 362
+                        L179 271
+                        Z
+                        "
+                        fill="#11172c"
+                        stroke="#5d6798"
+                        stroke-width="1"
+                    />
+
+
+                    <path
+                        d="
+                        M197 225
+                        Q209 245 213 274
+                        L227 354
+                        Q229 363 222 365
+                        Q216 367 213 359
+                        L186 267
+                        Z
+                        "
+                        fill="#1a2038"
+                    />
+
+
+                    <circle
+                        cx="43"
+                        cy="364"
+                        r="11"
+                        fill="#c58a70"
+                    />
+
+
+                    <circle
+                        cx="227"
+                        cy="364"
+                        r="11"
+                        fill="#c58a70"
+                    />
+
+
+                    <g transform="rotate(-8 47 347)">
+
+                        <rect
+                            x="28"
+                            y="335"
+                            width="43"
+                            height="28"
+                            rx="3"
+                            fill="#f0eee4"
+                            stroke="#aaa99f"
+                            stroke-width="1"
+                        />
+
+
+                        <path
+                            d="M34 343H65"
+                            stroke="#7c5ce5"
+                            stroke-width="2"
+                        />
+
+                        <path
+                            d="M34 349H58"
+                            stroke="#888b98"
+                            stroke-width="1"
+                        />
+
+                        <path
+                            d="M34 354H52"
+                            stroke="#888b98"
+                            stroke-width="1"
+                        />
+
+
+                        <path
+                            d="
+                            M62 359
+                            L67 374
+                            L72 358
+                            "
+                            fill="#7058dc"
+                        />
+
+                    </g>
+
+
+                    <path
+                        d="
+                        M58 394
+                        Q135 407
+                        212 394
+                        "
+                        fill="none"
+                        stroke="#606b9e"
+                        stroke-width="1"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <!-- INFORMATION CARDS -->
+
+            <div class="info a">
+
+                <small>
+                    CAREER DIRECTION
+                </small>
+
+                <h3>
+                    Find your strongest path
+                </h3>
+
+                <p>
+                    Compare your interests, skills and goals.
+                </p>
+
+            </div>
+
+
+            <div class="info b">
+
+                <small>
+                    SKILL STRATEGY
+                </small>
+
+                <h3>
+                    Identify what to learn
+                </h3>
+
+                <p>
+                    Discover the skills that can improve your profile.
+                </p>
+
+            </div>
+
+
+            <div class="info c">
+
+                <small>
+                    JOB READINESS
+                </small>
+
+                <h3>
+                    Become interview ready
+                </h3>
+
+                <p>
+                    Practice questions and improve your confidence.
+                </p>
+
+            </div>
+
+
+            <div class="info d">
+
+                <small>
+                    NEXT MOVE
+                </small>
+
+                <h3>
+                    Build your roadmap
+                </h3>
+
+                <p>
+                    Turn your career goal into practical steps.
+                </p>
+
+            </div>
+
+
+            <!-- TALK -->
+
+            <div class="talk">
+
+                <button onclick="openChat()">
+                    Start a conversation
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUESTION PANEL -->
+
+        <aside class="question-panel">
+
+            <div class="question-head">
+
+                <small>
+                    CAREER QUESTIONS
+                </small>
+
+                <h2>
+                    What do you want to know?
+                </h2>
+
+                <p>
+                    Pick a topic, then type your question and get an answer from the AI coach.
+                </p>
+
+            </div>
+
+
+            <div class="categories">
+
+                <button
+                    class="category active"
+                    data-topic="all"
+    onclick="showCategory('all',this)">
+                    All
+                </button>
+
+                <button
+                    class="category"
+                    data-topic="career"
+    onclick="showCategory('career',this)">
+                    Career
+                </button>
+
+                <button
+                    class="category"
+                    data-topic="skills"
+    onclick="showCategory('skills',this)">
+                    Skills
+                </button>
+
+                <button
+                    class="category"
+                    data-topic="jobs"
+    onclick="showCategory('jobs',this)">
+                    Jobs
+                </button>
+
+                <button
+                    class="category"
+                    data-topic="interview"
+    onclick="showCategory('interview',this)">
+                    Interview
+                </button>
+
+                <button
+                    class="category"
+                    data-topic="mca"
+    onclick="showCategory('mca',this)">
+                    MCA
+                </button>
+
+            </div>
+
+
+            <form class="ask-box" id="askForm">
+                <textarea
+                    id="panelQuestion"
+                    rows="5"
+                    placeholder="Type your question here... For example: How can I become a QA tester?"></textarea>
+                <div class="ask-topic" id="askTopic">Topic: All</div>
+                <button class="ask-btn" type="submit">
+                    Ask CareerPilot →
+                </button>
+            </form>
+        </aside>
+
+    </section>
+
+
+    <!-- BOTTOM -->
+
+    <section class="bottom">
+
+        <div class="bottom-card">
+
+            <small>
+                CAREER DIRECTION
+            </small>
+
+            <h3>
+                Explore your options
+            </h3>
+
+            <p>
+                Compare different technology careers before
+                choosing your specialization.
+            </p>
+
+        </div>
+
+
+        <div class="bottom-card">
+
+            <small>
+                PERSONAL DEVELOPMENT
+            </small>
+
+            <h3>
+                Build the right skills
+            </h3>
+
+            <p>
+                Focus your learning on practical skills that
+                support your target career.
+            </p>
+
+        </div>
+
+
+        <div class="bottom-card">
+
+            <small>
+                CONVERSATION MEMORY
+            </small>
+
+            <h3>
+                Continue where you stopped
+            </h3>
+
+            <p>
+                Your questions remain in the current conversation
+                so you can continue discussing your career.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     CHAT PANEL
+     ========================================================= -->
+
+<div class="chat-panel" id="chatPanel">
+
+    <div class="chat-head">
+
+        <div class="chat-title">
+
+            <div class="ai-icon"></div>
+
+            <div>
+
+                <strong>
+                    CareerPilot AI
+                </strong>
+
+                <small>
+                    PERSONAL CAREER ADVISOR
+                </small>
+
+            </div>
+
+        </div>
+
+        <button
+            class="close"
+            onclick="closeChat()">
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="conversation-status">
+
+        Conversation active — ask follow-up questions naturally.
+
+    </div>
+
+
+    <div
+        class="messages"
+        id="messages">
+
+        <div class="message ai">
+
+            Hello! I'm CareerPilot AI.
+
+            You can ask me about careers, skills, jobs,
+            interviews, projects, MCA or your next learning step.
+
+            You can also continue asking follow-up questions
+            in this same conversation.
+
+        </div>
+
+    </div>
+
+
+    <div class="quick">
+        <button data-topic="all" class="active" onclick="showCategory('all',this)">All</button>
+        <button data-topic="career" onclick="showCategory('career',this)">Career</button>
+        <button data-topic="skills" onclick="showCategory('skills',this)">Skills</button>
+        <button data-topic="jobs" onclick="showCategory('jobs',this)">Jobs</button>
+        <button data-topic="interview" onclick="showCategory('interview',this)">Interview</button>
+        <button data-topic="mca" onclick="showCategory('mca',this)">MCA</button>
+    </div>
+    <form
+        class="chat-input"
+        id="chatForm">
+
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Continue your conversation..."
+            autocomplete="off">
+
+        <button
+            class="send"
+            type="submit">
+            →
+        </button>
+
+    </form>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+ const API_URL = "";
+
+let userName = localStorage.getItem("careerpilot_name") || "User";
+const userId = localStorage.getItem("careerpilot_user_id");
+
+function displayUserName(name) {
+    const fullName = (name || "User").trim();
+
+    document.getElementById("userFullName").textContent = fullName;
+
+    const initials = fullName
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("");
+
+    document.getElementById("userAvatar").textContent = initials || "U";
+
+    document.getElementById("userLabel").textContent =
+        fullName.toUpperCase() + " • LIVE CAREER ANALYSIS";
+}
+
+displayUserName(userName);
+
+async function loadUserDetails() {
+    if (!userId) return;
+
+    try {
+        const response = await fetch(`${API_URL}/users/${userId}`);
+
+        if (!response.ok) return;
+
+        const user = await response.json();
+
+        if (user.name) {
+            userName = user.name;
+            localStorage.setItem("careerpilot_name", userName);
+            displayUserName(userName);
+        }
+    } catch (error) {
+        console.error("User details error:", error);
+    }
+}
+
+loadUserDetails();
+
+
+/* =========================================================
+   OPEN CHAT
+   ========================================================= */
+
+function openChat(){
+
+    document
+        .getElementById("chatPanel")
+        .classList.add("open");
+
+    setTimeout(function(){
+
+        document
+            .getElementById("messageInput")
+            .focus();
+
+    },350);
+}
+
+
+/* =========================================================
+   CLOSE CHAT
+   ========================================================= */
+
+function closeChat(){
+
+    document
+        .getElementById("chatPanel")
+        .classList.remove("open");
+}
+
+
+/* =========================================================
+   QUESTION
+   ========================================================= */
+
+function askQuestion(button){
+
+    const text =
+        button.textContent.trim();
+
+    openChat();
+
+    document.getElementById("messageInput").value =
+        text;
+
+    setTimeout(function(){
+
+        document
+            .getElementById("chatForm")
+            .dispatchEvent(
+                new Event("submit",{
+                    bubbles:true,
+                    cancelable:true
+                })
+            );
+
+    },300);
+}
+
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+let selectedTopic = "all";
+
+function showCategory(category,button){
+
+    selectedTopic = category;
+
+    // keep both topic rows (right panel and chat window) in sync
+    document
+        .querySelectorAll("[data-topic]")
+        .forEach(function(item){
+            item.classList.toggle(
+                "active",
+                item.dataset.topic === category
+            );
+        });
+
+    const label =
+        document.getElementById("askTopic");
+
+    if(label){
+        const names = {
+            all:"All",
+            career:"Career",
+            skills:"Skills",
+            jobs:"Jobs",
+            interview:"Interview",
+            mca:"MCA"
+        };
+        label.textContent =
+            "Topic: " + (names[category] || "All");
+    }
+}
+
+/* ask box in the right panel */
+(function(){
+
+    const form =
+        document.getElementById("askForm");
+
+    const box =
+        document.getElementById("panelQuestion");
+
+    if(!form || !box) return;
+
+    form.addEventListener("submit",function(event){
+
+        event.preventDefault();
+
+        const text = box.value.trim();
+
+        if(!text) return;
+
+        box.value = "";
+
+        openChat();
+
+        document.getElementById("messageInput").value = text;
+
+        setTimeout(function(){
+            document
+                .getElementById("chatForm")
+                .dispatchEvent(
+                    new Event("submit",{
+                        bubbles:true,
+                        cancelable:true
+                    })
+                );
+        },300);
+    });
+
+    // Enter = send, Shift+Enter = new line
+    box.addEventListener("keydown",function(event){
+        if(event.key === "Enter" && !event.shiftKey){
+            event.preventDefault();
+            form.requestSubmit();
+        }
+    });
+
+})();
+
+/* =========================================================
+   ADD MESSAGE
+   ========================================================= */
+
+function addMessage(text,type){
+
+    const messages =
+        document.getElementById("messages");
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "message " + type;
+
+    div.textContent =
+        text;
+
+    messages.appendChild(div);
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+    return div;
+}
+
+
+/* =========================================================
+   QUICK QUESTION
+   ========================================================= */
+
+function useSuggestion(text){
+
+    document.getElementById("messageInput").value =
+        text;
+
+    document
+        .getElementById("chatForm")
+        .dispatchEvent(
+            new Event("submit",{
+                bubbles:true,
+                cancelable:true
+            })
+        );
+}
+
+/* =================================================
+   LOAD PREVIOUS CHAT HISTORY
+================================================= */
+
+async function loadChatHistory(){
+
+    if(!userId){
+        console.log("No logged-in user found.");
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_URL}/chat/history/${userId}`
+            );
+
+        if(!response.ok){
+            console.log("No chat history available yet.");
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        const messages =
+            data.messages || [];
+
+
+        messages.forEach(function(item){
+
+            addMessage(
+                item.message,
+                "user"
+            );
+
+            addMessage(
+                item.response,
+                "ai"
+            );
+
+        });
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Chat history error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =================================================
+   SEND MESSAGE TO CAREERPILOT
+================================================= */
+
+document
+    .getElementById("chatForm")
+    .addEventListener(
+        "submit",
+        async function(event){
+
+            event.preventDefault();
+
+
+            const input =
+                document.getElementById("messageInput");
+
+            const text =
+                input.value.trim();
+
+
+            if(!text){
+                return;
+            }
+
+
+            /* USER MESSAGE */
+
+            addMessage(
+                text,
+                "user"
+            );
+
+
+            input.value = "";
+
+
+            /* AI LOADING MESSAGE */
+
+            const loading =
+                addMessage(
+                    "CareerPilot is analyzing your question...",
+                    "ai"
+                );
+
+
+            try{
+
+                const response =
+                    await fetch(
+                        `${API_URL}/chat`,
+                        {
+                            method:"POST",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:JSON.stringify({
+                                message:text,
+                                user_id:
+                                    Number(userId),
+                                topic:selectedTopic
+                            })
+                        }
+                    );
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        "Chat request failed."
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                loading.textContent =
+                    data.response ||
+                    data.reply ||
+                    data.message ||
+                    "I couldn't generate a response right now.";
+
+            }
+
+
+            catch(error){
+
+                loading.textContent =
+                    "CareerPilot could not connect to the AI service. Please make sure the backend is running.";
+
+                console.error(
+                    "Chat error:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+
+
+/* =================================================
+   LOAD HISTORY WHEN PAGE OPENS
+================================================= */
+
+loadChatHistory();
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+function logout(){
+
+    localStorage.removeItem(
+        "careerpilot_logged_in"
+    );
+
+    window.location.href =
+        "login.html";
+}
+
+
+/* Make dashboard-style Sign out button work */
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+if(logoutBtn){
+
+    logoutBtn.addEventListener(
+        "click",
+        function(event){
+
+            event.preventDefault();
+
+            logout();
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>

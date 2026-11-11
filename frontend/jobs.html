@@ -1,0 +1,1989 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Matching | CareerPilot AI</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background:
+        radial-gradient(circle at 80% 10%, rgba(124,58,237,.12), transparent 30%),
+        radial-gradient(circle at 60% 80%, rgba(37,99,235,.08), transparent 30%),
+        #070a15;
+    color: #f8fafc;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 245px;
+    height: 100vh;
+    padding: 25px 16px;
+    background: rgba(7,9,18,.92);
+    border-right: 1px solid rgba(255,255,255,.07);
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 10px 30px;
+}
+
+.brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg,#8b5cf6,#38bdf8);
+    box-shadow: 0 0 25px rgba(139,92,246,.35);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.brand span {
+    display: block;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.brand small {
+    display: block;
+    color: #707891;
+    font-size: 9px;
+    letter-spacing: 1.6px;
+    margin-top: 2px;
+}
+
+.nav-title {
+    color: #4f566d;
+    font-size: 9px;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    padding: 0 11px 9px;
+    text-transform: uppercase;
+}
+
+.account-title {
+    margin-top: 22px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav a {
+    height: 43px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    color: #858ca3;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 11px;
+    transition: .25s ease;
+}
+
+.nav a:hover {
+    color: #fff;
+    background: rgba(255,255,255,.045);
+    transform: translateX(3px);
+}
+
+.nav a.active {
+    color: #fff;
+    background: linear-gradient(90deg,rgba(139,92,246,.18),rgba(56,189,248,.07));
+    border: 1px solid rgba(139,92,246,.15);
+    box-shadow: inset 3px 0 0 #8b5cf6;
+}
+
+.nav a.active .nav-icon {
+    color: #a78bfa;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nav-icon svg {
+    width: 17px;
+    height: 17px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sidebar-bottom {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 20px;
+}
+
+.profile-mini {
+    padding: 13px;
+    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(255,255,255,.025);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg,#8b5cf6,#22d3ee);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.profile-mini strong {
+    display: block;
+    font-size: 11px;
+    color: #fff;
+    max-width: 135px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-mini span {
+    color: #707890;
+    font-size: 9px;
+}
+
+/* MAIN */
+main {
+    margin-left: 245px;
+    padding: 30px 38px 50px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.topbar h1 {
+    font-size: 26px;
+    font-weight: 650;
+    letter-spacing: -.04em;
+}
+
+.topbar p {
+    color: #7f899d;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 20px;
+    color: #a7b0c1;
+    font-size: 11px;
+    letter-spacing: .08em;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 10px rgba(34,197,94,.7);
+}
+
+/* PAGE HEADER */
+.page-header {
+    padding: 28px 30px;
+    border-radius: 20px;
+    background: linear-gradient(135deg,rgba(124,58,237,.12),rgba(37,99,235,.06));
+    border: 1px solid rgba(255,255,255,.07);
+    margin-bottom: 22px;
+}
+
+.eyebrow {
+    color: #a78bfa;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    margin-bottom: 10px;
+}
+
+.page-header h2 {
+    font-size: 30px;
+    letter-spacing: -.04em;
+    margin-bottom: 8px;
+}
+
+.page-header p {
+    color: #8993a8;
+    max-width: 680px;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* FORM */
+.match-form {
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(10,14,27,.82);
+    border: 1px solid rgba(255,255,255,.07);
+    margin-bottom: 24px;
+}
+
+.section-heading {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.section-description {
+    color: #7f899d;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.field {
+    margin-bottom: 19px;
+}
+
+.field label {
+    display: block;
+    color: #dbe2f0;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 9px;
+}
+
+.field small {
+    display: block;
+    color: #778198;
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+input, textarea {
+    width: 100%;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 11px;
+    padding: 13px 14px;
+    color: #f8fafc;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+    transition: .2s;
+}
+
+input:focus, textarea:focus {
+    border-color: rgba(139,92,246,.65);
+    box-shadow: 0 0 0 3px rgba(139,92,246,.08);
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #68738b;
+}
+
+.file-input {
+    padding: 11px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.primary-btn {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg,#7c3aed,#2563eb);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(37,99,235,.18);
+    transition: .2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(124,58,237,.25);
+}
+
+.secondary-btn {
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.035);
+    color: #cbd5e1;
+    border-radius: 10px;
+    padding: 11px 16px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.message {
+    color: #9ca8bd;
+    font-size: 12px;
+    margin-top: 14px;
+    line-height: 1.5;
+}
+
+/* RESULTS */
+.results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 16px;
+}
+
+.results-heading h2 {
+    font-size: 19px;
+}
+
+.results-heading span {
+    color: #818ba1;
+    font-size: 11px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 17px;
+}
+
+.job-card {
+    padding: 22px;
+    border-radius: 17px;
+    background: rgba(10,14,27,.82);
+    border: 1px solid rgba(255,255,255,.07);
+    transition: .25s;
+    animation: fadeIn .4s ease both;
+}
+
+.job-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139,92,246,.3);
+    background: rgba(16,20,39,.95);
+}
+
+.job-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.job-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg,rgba(139,92,246,.2),rgba(56,189,248,.12));
+    border: 1px solid rgba(139,92,246,.15);
+    font-size: 18px;
+}
+
+.match-score {
+    color: #a78bfa;
+    background: rgba(124,58,237,.1);
+    border: 1px solid rgba(124,58,237,.2);
+    border-radius: 20px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.job-card h3 {
+    font-size: 16px;
+    margin-bottom: 7px;
+}
+
+.job-card p {
+    color: #8993a8;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.card-label {
+    color: #aab4c7;
+    font-size: 11px;
+    font-weight: 700;
+    margin: 18px 0 9px;
+}
+
+.skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.skill-chip {
+    padding: 6px 9px;
+    border-radius: 7px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.06);
+    color: #aeb7c8;
+    font-size: 10px;
+}
+
+.skill-chip.matched {
+    color: #9ce8c0;
+    background: rgba(34,197,94,.07);
+    border-color: rgba(34,197,94,.15);
+}
+
+.skill-chip.missing {
+    color: #f4c58b;
+    background: rgba(245,158,11,.06);
+    border-color: rgba(245,158,11,.15);
+}
+
+.progress-track {
+    height: 5px;
+    background: rgba(255,255,255,.07);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 14px;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#8b5cf6,#38bdf8);
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 45px 20px;
+    border: 1px dashed rgba(255,255,255,.12);
+    border-radius: 17px;
+    color: #7f899d;
+    background: rgba(255,255,255,.015);
+}
+
+.empty-state h3 {
+    color: #dce3f1;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.note {
+    color: #6f7a91;
+    font-size: 10px;
+    margin-top: 18px;
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width:1000px) {
+    main {
+        padding: 25px;
+    }
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        display: none;
+    }
+    main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+    .topbar, .results-heading {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .page-header h2 {
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-mark">CP</div>
+        <div>
+            <span>CareerPilot</span>
+            <small>AI CAREER INTELLIGENCE</small>
+        </div>
+    </div>
+
+    <div class="nav-title">Workspace</div>
+    <nav class="nav">
+        <a href="dashboard.html">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+            </span>
+            Dashboard
+        </a>
+
+        <a href="coach.html">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 5h16v11H8l-4 4z"></path>
+                    <path d="M8 9h8M8 12h5"></path>
+                </svg>
+            </span>
+            AI Career Coach
+        </a>
+
+        <a href="resume.html">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 3h9l3 3v15H6z"></path>
+                    <path d="M14 3v4h4M9 12h6M9 16h6"></path>
+                </svg>
+            </span>
+            Resume Analyzer
+        </a>
+
+        <a href="skill-gap.html">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 18V6M4 18h16"></path>
+                    <path d="M7 15l3-4 3 2 5-7"></path>
+                </svg>
+            </span>
+            Skill Gap Analyzer
+        </a>
+
+        <a href="roadmap.html">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="8"></circle>
+                    <path d="M12 7v5l3 2"></path>
+                </svg>
+            </span>
+            Career Roadmap
+        </a>
+
+        <a href="jobs.html" class="active">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M16 16l5 5"></path>
+                </svg>
+            </span>
+            Job Matching
+        </a>
+    </nav>
+
+    <div class="nav-title account-title">Account</div>
+    <nav class="nav">
+        <a href="profile.html">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="3"></circle>
+                    <path d="M5 20c1-4 4-6 7-6s6 2 7 6"></path>
+                </svg>
+            </span>
+            Profile
+        </a>
+
+        <a href="#" id="logoutBtn">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 5H5v14h5"></path>
+                    <path d="M13 8l4 4-4 4M17 12H8"></path>
+                </svg>
+            </span>
+            Sign out
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="profile-mini">
+            <div class="avatar" id="userAvatar">U</div>
+            <div>
+                <strong id="userFullName">User</strong>
+                <span>CareerPilot Member</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN -->
+ <main>
+    <div class="topbar">
+        <div>
+            <h1>Job Matching</h1>
+            <p>Explore job roles based on your CareerPilot analysis.</p>
+        </div>
+        <div class="system-status">
+            <span class="status-dot"></span>
+            PERSONALIZED MATCHING
+        </div>
+    </div>
+
+    <section class="page-header">
+        <div class="eyebrow">CAREER INTELLIGENCE</div>
+        <h2>Explore careers that match your profile.</h2>
+        <p>
+            CareerPilot combines your saved resume analysis, skill gaps,
+            career roadmap, and profile information to identify job roles
+            you may want to explore.
+        </p>
+    </section>
+
+    <section id="aiInsightBox" style="display:none; margin:0 0 22px; padding:20px 22px; border-radius:17px; background:rgba(10,14,27,.82); border:1px solid rgba(139,92,246,.3);">
+        <h3 style="margin:0 0 10px; font-size:16px;">✨ AI Career Advice</h3>
+        <ul id="aiInsightList" style="margin:0; padding-left:20px; line-height:1.7; color:#cbd5e1;"></ul>
+    </section>
+
+    <div class="results-heading">
+        <h2>Personalized Job Roles</h2>
+        <span id="resultCount">Loading your matches...</span>
+    </div>
+
+    <section class="results-grid" id="resultsGrid">
+        <div class="empty-state">
+            <h3>Analyzing your career profile</h3>
+            <p>Your saved information is being loaded.</p>
+        </div>
+    </section>
+
+    <p class="note">
+        Match percentages are indicative profile-fit estimates based on
+        available skills and interests. They are not hiring probabilities,
+        live job-market data, or verified AI predictions.
+    </p>
+</main>
+ <script>
+
+const API_URL = "";
+const userId = localStorage.getItem("careerpilot_user_id");
+
+const userFullName =
+    document.getElementById("userFullName");
+
+const userAvatar =
+    document.getElementById("userAvatar");
+
+const resultsGrid =
+    document.getElementById("resultsGrid");
+
+const resultCount =
+    document.getElementById("resultCount");
+
+
+/* =========================================
+   SAVED CAREERPILOT DATA
+========================================= */
+
+let savedData = {
+    dashboard: null,
+    gap: null,
+    roadmap: null,
+    roles: []
+};
+
+
+/* =========================================
+   USER DISPLAY
+========================================= */
+
+function displayUserName(name) {
+
+    const fullName =
+        (name || "User").trim();
+
+    userFullName.textContent =
+        fullName;
+
+    const initials =
+        fullName
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(part =>
+                part[0].toUpperCase()
+            )
+            .join("");
+
+    userAvatar.textContent =
+        initials || "U";
+}
+
+
+/* =========================================
+   API HELPERS
+========================================= */
+
+async function fetchJSON(url) {
+
+    const response =
+        await fetch(url);
+
+    if (!response.ok) {
+
+        throw new Error(
+            `Request failed: ${response.status}`
+        );
+    }
+
+    return response.json();
+}
+
+
+async function fetchOptional(url) {
+
+    try {
+
+        return await fetchJSON(url);
+
+    } catch (error) {
+
+        console.warn(
+            `Optional data unavailable: ${url}`,
+            error
+        );
+
+        return null;
+    }
+}
+
+
+/* =========================================
+   DATA HELPERS
+========================================= */
+
+function normalize(value) {
+
+    return String(value || "")
+        .toLowerCase()
+        .trim();
+}
+
+
+function unique(items) {
+
+    return [
+        ...new Set(
+            items.filter(Boolean)
+        )
+    ];
+}
+
+
+function asArray(value) {
+
+    return Array.isArray(value)
+        ? value
+        : [];
+}
+
+
+function getProfile(data) {
+
+    return (
+        data?.profile ||
+        data?.user?.profile ||
+        {}
+    );
+}
+
+
+function getResumeSkills(data) {
+
+    const possibleLists = [
+
+        data?.skills?.list,
+
+        data?.resume_skills,
+
+        data?.resume?.skills,
+
+        data?.latest_resume?.skills
+
+    ];
+
+
+    for (const list of possibleLists) {
+
+        if (Array.isArray(list)) {
+
+            return list
+                .map(item =>
+                    typeof item === "string"
+                        ? item
+                        : item.skill_name ||
+                          item.name ||
+                          ""
+                )
+                .filter(Boolean);
+        }
+    }
+
+
+    return [];
+}
+
+
+function getGapResult(data) {
+
+    return (
+        data?.result ||
+        data?.skill_gap ||
+        data?.data ||
+        null
+    );
+}
+
+
+function getRoadmapResult(data) {
+
+    return (
+        data?.roadmap ||
+        data?.result ||
+        data?.data ||
+        null
+    );
+}
+
+
+function getGapSkills(gap, field) {
+
+    const values =
+        asArray(gap?.[field]);
+
+
+    return values
+        .map(item =>
+            typeof item === "string"
+                ? item
+                : item.skill_name ||
+                  item.name ||
+                  ""
+        )
+        .filter(Boolean);
+}
+
+
+/* =========================================
+   PROFILE INTERESTS
+========================================= */
+
+function getProfileInterests(profile) {
+
+    const value =
+        profile?.interests;
+
+
+    if (Array.isArray(value)) {
+
+        return value.map(String);
+    }
+
+
+    if (typeof value === "string") {
+
+        return value
+            .split(/[,;\n]+/)
+            .map(item => item.trim())
+            .filter(Boolean);
+    }
+
+
+    return [];
+}
+
+
+/* =========================================
+   LOAD LOGGED-IN USER
+========================================= */
+
+async function loadLoggedInUser() {
+
+    const savedName =
+        localStorage.getItem(
+            "careerpilot_name"
+        );
+
+
+    if (savedName) {
+
+        displayUserName(savedName);
+    }
+
+
+    if (!userId) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    const user =
+        await fetchOptional(
+            `${API_URL}/users/${userId}`
+        );
+
+
+    if (user?.name) {
+
+        localStorage.setItem(
+            "careerpilot_name",
+            user.name
+        );
+
+        displayUserName(
+            user.name
+        );
+    }
+}
+
+
+/* =========================================
+   LOAD BACKEND JOB ROLES
+========================================= */
+
+/*
+    IMPORTANT:
+
+    There is NO hard-coded role list here.
+
+    Roles come directly from:
+
+        GET /skill-gap/roles
+
+    This is the same role source used
+    by the Skill Gap Analyzer.
+*/
+
+async function loadBackendRoles() {
+
+    const roleResponse =
+        await fetchJSON(
+            `${API_URL}/skill-gap/roles`
+        );
+
+
+    const roles =
+        Array.isArray(
+            roleResponse.roles
+        )
+            ? roleResponse.roles
+            : [];
+
+
+    if (!roles.length) {
+
+        return [];
+    }
+
+
+    /*
+        Load the required skills for
+        every backend role.
+
+        Example:
+
+        Data Analyst
+             ↓
+        /roles/Data%20Analyst/skills
+             ↓
+        SQL
+        Excel
+        Python
+        Statistics
+        ...
+    */
+
+    const rolesWithSkills =
+        await Promise.all(
+
+            roles.map(async role => {
+
+                try {
+
+                    const skillResponse =
+                        await fetchJSON(
+                            `${API_URL}/roles/${encodeURIComponent(role.name)}/skills`
+                        );
+
+
+                    const skills =
+                        Array.isArray(
+                            skillResponse.skills
+                        )
+                            ? skillResponse.skills
+                            : [];
+
+
+                    return {
+
+                        id:
+                            role.id,
+
+                        title:
+                            role.name,
+
+                        description:
+                            role.description ||
+                            "Career role available in CareerPilot.",
+
+                        skills:
+
+                            skills.map(skill => ({
+
+                                id:
+                                    skill.id,
+
+                                name:
+                                    skill.name,
+
+                                category:
+                                    skill.category,
+
+                                importance:
+                                    skill.importance
+
+                            }))
+
+                    };
+
+                } catch (error) {
+
+                    console.warn(
+                        `Could not load skills for ${role.name}`,
+                        error
+                    );
+
+
+                    return {
+
+                        id:
+                            role.id,
+
+                        title:
+                            role.name,
+
+                        description:
+                            role.description ||
+                            "Career role available in CareerPilot.",
+
+                        skills: []
+
+                    };
+                }
+
+            })
+        );
+
+
+    return rolesWithSkills;
+}
+
+
+/* =========================================
+   LOAD SAVED CAREERPILOT DATA
+========================================= */
+
+async function loadCareerData() {
+
+    resultsGrid.innerHTML = `
+
+        <div class="empty-state">
+
+            <h3>
+                Analyzing your career profile
+            </h3>
+
+            <p>
+                Your saved information is being loaded.
+            </p>
+
+        </div>
+    `;
+
+
+    resultCount.textContent =
+        "Loading your matches...";
+
+
+    try {
+
+        /*
+            Load:
+
+            1. User dashboard
+            2. Latest skill-gap analysis
+            3. Latest roadmap
+            4. Backend job roles
+        */
+
+        const [
+            dashboard,
+            gapData,
+            roadmapData,
+            backendRoles
+        ] = await Promise.all([
+
+            fetchJSON(
+                `${API_URL}/dashboard/${userId}`
+            ),
+
+            fetchOptional(
+                `${API_URL}/skill-gap/latest/${userId}`
+            ),
+
+            fetchOptional(
+                `${API_URL}/roadmap/latest/${userId}`
+            ),
+
+            loadBackendRoles()
+
+        ]);
+
+
+        savedData.dashboard =
+            dashboard;
+
+
+        savedData.gap =
+            getGapResult(gapData);
+
+
+        savedData.roadmap =
+            getRoadmapResult(roadmapData);
+
+
+        savedData.roles =
+            backendRoles;
+
+
+        generateJobMatches();
+
+
+    } catch (error) {
+
+        console.error(
+            "Career data loading error:",
+            error
+        );
+
+
+        resultsGrid.innerHTML = `
+
+            <div class="empty-state">
+
+                <h3>
+                    Unable to load your career analysis
+                </h3>
+
+                <p>
+                    Check that your backend is running
+                    and that your CareerPilot data is available.
+                </p>
+
+            </div>
+        `;
+
+
+        resultCount.textContent =
+            "Analysis unavailable";
+    }
+}
+
+
+/* =========================================
+   MATCH BACKEND ROLE
+========================================= */
+
+ function calculateRoleMatch(role, currentSkills) {
+    const normalizeSkill = value =>
+        String(value || "")
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, " ");
+
+    const currentSkillSet = new Set(
+        currentSkills.map(normalizeSkill).filter(Boolean)
+    );
+
+    const requiredSkills = Array.isArray(role.skills)
+        ? role.skills.filter(skill =>
+            skill && skill.name && String(skill.name).trim()
+        )
+        : [];
+
+    const matchedSkills = requiredSkills.filter(skill =>
+        currentSkillSet.has(normalizeSkill(skill.name))
+    );
+
+    const missingSkills = requiredSkills.filter(skill =>
+        !currentSkillSet.has(normalizeSkill(skill.name))
+    );
+
+    const score = requiredSkills.length
+        ? Math.round(
+            (matchedSkills.length / requiredSkills.length) * 100
+        )
+        : 0;
+
+    return {
+        ...role,
+        score,
+        matchedSkills,
+        missingSkills
+    };
+}
+
+/* =========================================
+   GENERATE JOB MATCHES
+========================================= */
+
+function generateJobMatches() {
+
+    const dashboard =
+        savedData.dashboard || {};
+
+
+    const profile =
+        getProfile(dashboard);
+
+
+    const gap =
+        savedData.gap;
+
+
+    const roadmap =
+        savedData.roadmap;
+
+
+    const backendRoles =
+        savedData.roles || [];
+
+
+    /*
+        User skills from:
+
+        - Resume Analyzer
+        - Skill Gap Analyzer
+    */
+
+    const resumeSkills =
+        getResumeSkills(
+            dashboard
+        );
+
+
+    const haveSkills =
+        getGapSkills(
+            gap,
+            "skills_have"
+        );
+
+
+    const currentSkills =
+        unique([
+
+            ...resumeSkills,
+
+            ...haveSkills
+
+        ]).map(normalize);
+
+
+    /*
+        Determine user's target role.
+
+        Priority:
+
+        1. Skill Gap role
+        2. Roadmap role
+        3. Profile target role
+    */
+
+    const targetRole =
+
+        gap?.role_name ||
+
+        roadmap?.role_name ||
+
+        profile?.target_role ||
+
+        "";
+
+
+    /*
+        If backend has no roles.
+    */
+
+    if (!backendRoles.length) {
+
+        resultsGrid.innerHTML = `
+
+            <div class="empty-state">
+
+                <h3>
+                    No job roles are available
+                </h3>
+
+                <p>
+                    No career roles have been configured
+                    in the CareerPilot backend yet.
+                </p>
+
+            </div>
+        `;
+
+
+        resultCount.textContent =
+            "No backend roles available";
+
+
+        return;
+    }
+
+
+    /*
+        If user has no skill information,
+        still show the backend roles.
+    */
+
+    if (!currentSkills.length) {
+
+        const results =
+            backendRoles.map(role => ({
+
+                ...role,
+
+                score:
+                    normalize(role.title) ===
+                    normalize(targetRole)
+                        ? 65
+                        : 0,
+
+                matchedSkills: [],
+
+                missingSkills:
+                    asArray(role.skills)
+
+            }));
+
+
+        renderResults(
+            results.slice(0, 6)
+        );
+
+
+        return;
+    }
+
+
+    /*
+        Calculate matches for EVERY
+        role coming from the backend.
+    */
+
+    const results =
+        backendRoles.map(role =>
+
+             calculateRoleMatch(
+    role,
+    currentSkills
+)
+
+        );
+
+
+    /*
+        Highest matches first.
+    */
+
+    results.sort(
+        (a, b) =>
+            b.score - a.score
+    );
+
+
+    /*
+        Show the best six roles.
+    */
+
+    renderResults(
+        results.slice(0, 6)
+    );
+
+    loadAIInsight(results.slice(0, 3), currentSkills);
+}
+
+/* =========================================
+   AI CAREER ADVICE (Gemini)
+========================================= */
+async function loadAIInsight(topRoles, currentSkills) {
+    const box = document.getElementById("aiInsightBox");
+    const list = document.getElementById("aiInsightList");
+    if (!box || !list || !topRoles.length) return;
+
+    try {
+        const response = await fetch(`${API_URL}/jobs/ai-insight`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: Number(userId),
+                skills: currentSkills,
+                top_roles: topRoles.map(role => ({
+                    title: role.title,
+                    score: role.score,
+                    missing: (role.missingSkills || []).map(skill => skill.name)
+                }))
+            })
+        });
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const tips = data.insight || [];
+        if (!tips.length) return;
+
+        list.innerHTML = tips
+            .map(tip => `<li>${escapeHTML(tip)}</li>`)
+            .join("");
+        box.style.display = "block";
+    } catch (error) {
+        console.warn("AI insight unavailable:", error);
+    }
+}
+
+
+/* =========================================
+   DISPLAY RESULTS
+========================================= */
+
+function renderResults(roles) {
+
+    resultsGrid.innerHTML =
+        "";
+
+
+    if (!roles.length) {
+
+        resultsGrid.innerHTML = `
+
+            <div class="empty-state">
+
+                <h3>
+                    No role matches found yet
+                </h3>
+
+                <p>
+                    Add more information to your
+                    saved profile and analysis.
+                </p>
+
+            </div>
+        `;
+
+
+        resultCount.textContent =
+            "No matches found";
+
+
+        return;
+    }
+
+
+    resultCount.textContent =
+        `${roles.length} roles displayed`;
+
+
+    roles.forEach(
+        (role, index) => {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "job-card";
+
+
+            card.style.animationDelay =
+                `${index * 70}ms`;
+
+
+            /*
+                MATCHED SKILLS
+            */
+
+            const matchedHTML =
+                role.matchedSkills.length
+
+                    ? role.matchedSkills
+                        .map(skill => {
+
+                            const skillName =
+                                typeof skill === "string"
+                                    ? skill
+                                    : skill.name;
+
+                            return `
+
+                                <span
+                                    class="skill-chip matched"
+                                >
+                                    ${escapeHTML(
+                                        skillName
+                                    )}
+                                </span>
+
+                            `;
+
+                        })
+                        .join("")
+
+                    : `
+
+                        <span class="skill-chip">
+                            No direct skill match
+                        </span>
+
+                    `;
+
+
+            /*
+                MISSING SKILLS
+            */
+
+            const missingHTML =
+                role.missingSkills.length
+
+                    ? role.missingSkills
+                        .slice(0, 5)
+                        .map(skill => {
+
+                            const skillName =
+                                typeof skill === "string"
+                                    ? skill
+                                    : skill.name;
+
+                            return `
+
+                                <span
+                                    class="skill-chip missing"
+                                >
+                                    ${escapeHTML(
+                                        skillName
+                                    )}
+                                </span>
+
+                            `;
+
+                        })
+                        .join("")
+
+                    : `
+
+                        <span
+                            class="skill-chip matched"
+                        >
+                            No listed skill gaps
+                        </span>
+
+                    `;
+
+
+            /*
+                ROLE CARD
+
+                No hard-coded role name.
+                No hard-coded skills.
+                Everything comes from backend.
+            */
+
+            card.innerHTML = `
+
+                <div class="job-card-top">
+
+                    <div class="job-icon">
+                        💼
+                    </div>
+
+                    <div class="match-score">
+                        ${role.score}% profile fit
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(
+                        role.title
+                    )}
+                </h3>
+
+
+                <p>
+                    ${escapeHTML(
+                        role.description
+                    )}
+                </p>
+
+
+                <div class="card-label">
+                    Skills you already have
+                </div>
+
+
+                <div class="skill-list">
+                    ${matchedHTML}
+                </div>
+
+
+                <div class="card-label">
+                    Skills to explore
+                </div>
+
+
+                <div class="skill-list">
+                    ${missingHTML}
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        style="width:${role.score}%"
+                    >
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="form-actions"
+                    style="margin-top:18px;"
+                >
+
+                    <a
+                        href="skill-gap.html"
+                        class="secondary-btn"
+                        style="text-decoration:none;"
+                    >
+                        Review Skill Gap
+                    </a>
+
+
+                </div>
+
+            `;
+
+
+            resultsGrid.appendChild(
+                card
+            );
+
+        }
+    );
+}
+
+
+/* =========================================
+   HTML SAFETY
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        character => ({
+
+            "&":
+                "&amp;",
+
+            "<":
+                "&lt;",
+
+            ">":
+                "&gt;",
+
+            '"':
+                "&quot;",
+
+            "'":
+                "&#39;"
+
+        })[character]
+    );
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            event.preventDefault();
+
+
+            localStorage.removeItem(
+                "careerpilot_logged_in"
+            );
+
+            localStorage.removeItem(
+                "careerpilot_user_id"
+            );
+
+            localStorage.removeItem(
+                "careerpilot_name"
+            );
+
+            localStorage.removeItem(
+                "careerpilot_email"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+/* =========================================
+   CHECK PROFILE COMPLETENESS
+========================================= */
+
+async function checkProfileComplete() {
+    const response = await fetch(
+        `${API_URL}/users/${userId}/profile`
+    );
+
+    if (!response.ok) {
+        throw new Error("Could not verify your saved profile.");
+    }
+
+    const data = await response.json();
+
+    // Supports either a nested profile or top-level profile fields.
+    const profile = {
+        ...data,
+        ...(data.profile || {}),
+        ...(data.user || {})
+    };
+
+    const fullName =
+        profile.fullName ||
+        profile.full_name ||
+        profile.name ||
+        localStorage.getItem("careerpilot_name");
+
+    const requiredFields = [
+        ["Full name", fullName],
+        ["Education", profile.education],
+        ["Institution", profile.institution],
+        ["Study year", profile.studyYear ?? profile.study_year],
+        ["Experience", profile.experience],
+        ["Target role", profile.targetRole ?? profile.target_role],
+        ["Interests", profile.interests],
+        ["Skills", profile.skills]
+    ];
+
+    function hasValue(value) {
+        if (Array.isArray(value)) {
+            return value.some(item => String(item).trim());
+        }
+
+        return value !== null &&
+            value !== undefined &&
+            String(value).trim() !== "";
+    }
+
+    const missingFields = requiredFields
+        .filter(([, value]) => !hasValue(value))
+        .map(([label]) => label);
+
+    return {
+        complete: missingFields.length === 0,
+        missingFields
+    };
+}
+
+
+/* =========================================
+   SHOW PROFILE COMPLETION MESSAGE
+========================================= */
+
+function showProfileIncomplete(missingFields) {
+    resultsGrid.innerHTML = `
+        <div class="empty-state">
+            <h3>Complete your profile first</h3>
+            <p>
+                Add the missing information below to unlock
+                personalized job matching.
+            </p>
+
+            <div class="skill-list"
+                 style="justify-content:center; margin:18px 0;">
+                ${missingFields.map(field => `
+                    <span class="skill-chip missing">
+                        ${escapeHTML(field)}
+                    </span>
+                `).join("")}
+            </div>
+
+            <a href="profile.html"
+               class="primary-btn"
+               style="display:inline-block;
+                      text-decoration:none;
+                      margin-top:8px;">
+                Complete My Profile →
+            </a>
+        </div>
+    `;
+
+    resultCount.textContent = "Profile incomplete";
+}
+
+
+/* =========================================
+   SHOW PROFILE VERIFICATION ERROR
+========================================= */
+
+function showProfileCheckError() {
+    resultsGrid.innerHTML = `
+        <div class="empty-state">
+            <h3>Unable to verify your profile</h3>
+            <p>
+                Make sure the CareerPilot backend is running
+                and the profile API is available. Your job
+                matches have not been loaded.
+            </p>
+        </div>
+    `;
+
+    resultCount.textContent = "Profile check unavailable";
+}
+ 
+/* =========================================
+   START
+========================================= */
+
+(async function init() {
+    try {
+        // Check login first.
+        if (!userId) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        await loadLoggedInUser();
+
+        // Verify saved profile before loading any jobs.
+        const profileStatus = await checkProfileComplete();
+
+        if (!profileStatus.complete) {
+            showProfileIncomplete(profileStatus.missingFields);
+            return;
+        }
+
+        // Only complete profiles can see job matches.
+        await loadCareerData();
+
+    } catch (error) {
+        console.error("Job Matching initialization:", error);
+        showProfileCheckError();
+    }
+})();
+
+
+</script>
+
+</body>
+</html>

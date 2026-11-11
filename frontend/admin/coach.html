@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | AI Coach</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>AI Coach</h1>
+                <div class="subtitle">Questions students asked the AI Career Coach and the answers they got</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            <button class="secondary" type="button" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Student Questions and AI Answers</h2>
+                <div class="subtitle" style="margin-top:7px">The AI answers automatically. You can read every conversation or delete it.</div>
+            </div>
+            <span class="pill" id="count">0 records</span>
+        </div>
+        <div class="toolbar"><input id="search" type="search" placeholder="Search by student, email, question or answer..."></div>
+        <div id="list"><div class="empty">Loading...</div></div>
+    </section>
+
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+let all = [];
+function draw(items) {
+    $("count").textContent = items.length + " records";
+    CP.show($("list"), ["Student", "Question", "AI answer", "Date"],
+        items.map(m => ({ id: m.id, cells: [CP.person(m.user_name, m.user_email), CP.short(m.message, 70), CP.short(m.response, 70), CP.day(m.created_at)] })),
+        { view: id => view(all.find(m => String(m.id) === id)), del: id => remove(all.find(m => String(m.id) === id)) },
+        { empty: "No conversations found." });
+}
+const run = CP.search("search", () => all, m => [m.user_name, m.user_email, m.message, m.response].join(" "), draw);
+
+function view(m) {
+    CP.modal("Conversation",
+        '<div class="sub-text">' + CP.esc(m.user_name || "User") + " · " + CP.esc(m.user_email || "") + " · " + CP.esc(m.created_at || "") + "</div>" +
+        '<div class="label" style="margin-top:14px">Student asked</div><div class="bubble">' + CP.esc(m.message) + "</div>" +
+        '<div class="label">AI answered</div><div class="bubble">' + CP.esc(m.response) + "</div>");
+}
+async function remove(m) {
+    if (!confirm("Delete this conversation of " + (m.user_name || "the student") + "?")) return;
+    try { await CP.del("/admin/dashboard/chat-messages/" + m.id); CP.say("Conversation deleted.", "ok"); await load(); }
+    catch (e) { CP.say(e.message, "error"); }
+}
+async function load() {
+    try {
+        all = (await CP.get("/admin/dashboard/chat-messages")).messages || [];
+        CP.stats([["Total questions", all.length], ["Students who used the coach", new Set(all.map(m => m.user_id)).size],
+                  ["Latest question", all.length ? CP.day(all[0].created_at) : "-"]]);
+        run();
+    } catch (e) { CP.say("Could not load conversations: " + e.message, "error"); $("list").innerHTML = ""; }
+}
+$("refreshBtn").onclick = load;
+load();
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

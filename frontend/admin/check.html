@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Self Check</title>
+<style>
+body{margin:0;padding:28px;font-family:Arial,sans-serif;background:#0b0b18;color:#f4f4ff}
+.box{max-width:900px;margin:auto}
+h1{font-size:26px;margin:0 0 6px}
+p{color:#a5a5c4;font-size:14px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-top:18px;background:#151529;border-radius:12px;overflow:hidden}
+th,td{padding:12px 14px;text-align:left;font-size:14px;border-bottom:1px solid #292943;vertical-align:top}
+th{background:#19192e;color:#a5a5c4}
+.ok{color:#34d399;font-weight:bold}.bad{color:#fb7185;font-weight:bold}
+.hint{color:#a5a5c4;font-size:12px;margin-top:4px}
+button{border:0;border-radius:9px;padding:11px 16px;background:#6d5dfc;color:#fff;font-weight:bold;cursor:pointer;margin-top:12px}
+#summary{margin-top:18px;padding:14px;border-radius:10px;font-size:15px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🔍 CareerPilot Admin — Self Check</h1>
+  <p>This page tests your admin files and your backend. Take a screenshot of the whole page and send it to your helper.</p>
+  <button id="runBtn" type="button">▶ Run check again</button>
+  <div id="summary"></div>
+  <table>
+    <thead><tr><th style="width:36%">What is tested</th><th style="width:14%">Result</th><th>Details</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<script>
+const API = "";   // must be the same address as in js/admin-common.js
+const rows = document.getElementById("rows");
+let failed = 0;
+
+function add(name, ok, detail, hint) {
+    if (!ok) failed++;
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + name + "</td><td class='" + (ok ? "ok'>✅ OK" : "bad'>❌ FAIL") + "</td><td>" +
+        (detail || "") + (!ok && hint ? "<div class='hint'>👉 " + hint + "</div>" : "") + "</td>";
+    rows.appendChild(tr);
+}
+
+function loadScript(src) {
+    return new Promise(resolve => {
+        const s = document.createElement("script");
+        s.src = src + "?t=" + Date.now();
+        s.onload = () => resolve(true);
+        s.onerror = () => resolve(false);
+        document.body.appendChild(s);
+    });
+}
+function checkCss(href) {
+    return new Promise(resolve => {
+        const l = document.createElement("link");
+        l.rel = "stylesheet"; l.href = href + "?t=" + Date.now();
+        l.onload = () => resolve(true); l.onerror = () => resolve(false);
+        document.head.appendChild(l);
+    });
+}
+
+async function endpoint(path, label) {
+    try {
+        const res = await fetch(API + path, { headers: { "x-admin-key": localStorage.getItem("careerpilot_admin_key") || "" } });
+        if (res.ok) { add(label, true, "Backend answered (status " + res.status + ")"); return; }
+        const hints = {
+            403: "Admin key is wrong or expired. Log out and log in again.",
+            404: "This endpoint is missing. Replace backend/main.py with the new main.py and restart the backend.",
+            500: "The backend has an error. Look at the black terminal window running uvicorn for red text."
+        };
+        add(label, false, "Status " + res.status, hints[res.status] || "Unexpected answer from the backend.");
+    } catch (e) {
+        add(label, false, e.message, "Backend is not reachable. Start it with: uvicorn backend.main:app --reload");
+    }
+}
+
+async function run() {
+    rows.innerHTML = ""; failed = 0;
+    document.getElementById("summary").textContent = "Checking...";
+
+    const key = localStorage.getItem("careerpilot_admin_key");
+    add("You are logged in as admin", !!key, key ? "Admin key found" : "No admin key",
+        "Open login.html in this folder and log in first, then open this page again.");
+
+    add("css/admin-ui.css found", await checkCss("css/admin-ui.css"), "", "Put admin-ui.css inside a folder named css (next to dashboard.html).");
+
+    if (key) {
+        const common = await loadScript("js/admin-common.js");
+        add("js/admin-common.js found", common, "", "Put admin-common.js inside a folder named js (next to dashboard.html).");
+        if (common) {
+            const need = ["get", "post", "del", "say", "stats", "show", "modal", "table", "kv", "chips", "person", "search"];
+            const missing = typeof CP === "undefined" ? need : need.filter(n => typeof CP[n] !== "function");
+            add("admin-common.js is the NEW version", missing.length === 0,
+                missing.length ? "Missing functions: " + missing.join(", ") : "All functions present",
+                "This is an OLD copy. Download admin-common.js again and replace the file in the js folder.");
+            if (typeof CP !== "undefined" && CP.API) {
+                add("Backend address inside admin-common.js", CP.API === API, "admin-common.js uses: " + CP.API,
+                    "The address in admin-common.js is different from " + API);
+            }
+        }
+    }
+
+    add("js/admin-nav.js found", await loadScript("js/admin-nav.js"), "The purple menu bar should now appear at the top of this page.",
+        "Put admin-nav.js inside the js folder (next to admin-common.js).");
+
+    const list = [["/admin/dashboard/summary", "Backend: dashboard numbers"], ["/admin/dashboard/users", "Backend: users"],
+        ["/admin/dashboard/resumes", "Backend: resumes"], ["/admin/dashboard/chat-messages", "Backend: AI Coach conversations"],
+        ["/admin/dashboard/skill-gaps", "Backend: skill gap analyses"], ["/admin/dashboard/roadmaps", "Backend: roadmaps (needs NEW main.py)"],
+        ["/admin/roles", "Backend: career roles"], ["/admin/skills", "Backend: skills"], ["/admin/dashboard/ai-status", "Backend: AI status"]];
+    for (const [p, l] of list) await endpoint(p, l);
+
+    const s = document.getElementById("summary");
+    if (failed === 0) { s.style.background = "#123d34"; s.style.color = "#a7f3d0"; s.textContent = "✅ Everything is OK. Open dashboard.html and press Ctrl + F5."; }
+    else { s.style.background = "#421e2b"; s.style.color = "#fecdd3"; s.textContent = "❌ " + failed + " problem(s) found. Read the 👉 hints in the red rows."; }
+}
+document.getElementById("runBtn").onclick = run;
+run();
+</script>
+</body>
+</html>

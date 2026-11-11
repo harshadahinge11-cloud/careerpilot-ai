@@ -1,0 +1,7422 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analyzer | CareerPilot AI</title>
+
+    <link rel="stylesheet" href="css/global.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 80% 10%,
+                    rgba(94, 92, 255, 0.14),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 20% 80%,
+                    rgba(0, 210, 255, 0.08),
+                    transparent 30%
+                ),
+                #070914;
+
+            color: #f5f7ff;
+        }
+
+
+        /* =========================
+           APP
+        ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================================
+           DASHBOARD SIDEBAR
+           SAME STYLE AS DASHBOARD
+        ========================================================= */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+
+            top: 0;
+
+            width: 245px;
+
+            height: 100vh;
+
+            padding: 25px 16px;
+
+            background:
+                rgba(7,9,18,.92);
+
+            border-right:
+                1px solid
+                rgba(255,255,255,.07);
+
+            z-index: 100;
+
+            backdrop-filter:
+                blur(20px);
+
+            box-sizing: border-box;
+        }
+
+
+        /* =========================
+           BRAND
+        ========================= */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding:
+                0 10px 30px;
+        }
+
+
+        .brand-mark {
+
+            width: 36px;
+
+            height: 36px;
+
+            border-radius: 11px;
+
+            display: grid;
+
+            place-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #38bdf8
+                );
+
+            box-shadow:
+                0 0 25px
+                rgba(139,92,246,.35);
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            color: white;
+        }
+
+
+        .brand span {
+
+            display: block;
+
+            color: #f8fafc;
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+            letter-spacing: -.4px;
+        }
+
+
+        .brand small {
+
+            display: block;
+
+            color: #707891;
+
+            font-size: 9px;
+
+            letter-spacing: 1.6px;
+
+            margin-top: 2px;
+        }
+
+
+        /* =========================
+           NAV TITLE
+        ========================= */
+
+        .nav-title {
+
+            color: #4f566d;
+
+            font-size: 9px;
+
+            letter-spacing: 1.8px;
+
+            font-weight: 700;
+
+            padding:
+                0 11px 9px;
+
+            text-transform:
+                uppercase;
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        .nav {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 4px;
+        }
+
+
+        .nav a {
+
+            height: 43px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                0 12px;
+
+            color: #858ca3;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            border-radius: 11px;
+
+            transition:
+                .25s ease;
+        }
+
+
+        .nav a:hover {
+
+            color: #fff;
+
+            background:
+                rgba(255,255,255,.045);
+
+            transform:
+                translateX(3px);
+        }
+
+
+        .nav a.active {
+
+            color: #fff;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(139,92,246,.18),
+                    rgba(56,189,248,.07)
+                );
+
+            border:
+                1px solid
+                rgba(139,92,246,.15);
+
+            box-shadow:
+                inset 3px 0 0
+                #8b5cf6;
+        }
+
+
+        /* =========================
+           NAV ICON
+        ========================= */
+
+        .nav-icon {
+
+            width: 20px;
+
+            height: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            color: currentColor;
+        }
+
+
+        .nav-icon svg {
+
+            width: 17px;
+
+            height: 17px;
+
+            stroke: currentColor;
+
+            fill: none;
+
+            stroke-width: 1.8;
+
+            stroke-linecap: round;
+
+            stroke-linejoin: round;
+        }
+
+
+        .nav a.active .nav-icon {
+
+            color: #a78bfa;
+        }
+
+
+        /* =========================
+           SIDEBAR BOTTOM
+        ========================= */
+
+        .sidebar-bottom {
+
+            position: absolute;
+
+            left: 16px;
+
+            right: 16px;
+
+            bottom: 20px;
+        }
+
+
+        /* =========================
+           USER PROFILE
+        ========================= */
+
+        .profile-mini {
+
+            padding: 13px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            background:
+                rgba(255,255,255,.025);
+
+            border-radius: 14px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .avatar {
+
+            width: 34px;
+
+            height: 34px;
+
+            border-radius: 50%;
+
+            display: grid;
+
+            place-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #22d3ee
+                );
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+
+        .profile-mini strong {
+
+            display: block;
+
+            font-size: 11px;
+        }
+
+
+        .profile-mini span {
+
+            color: #707890;
+
+            font-size: 9px;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+
+            margin-left: 245px;
+
+            min-height: 100vh;
+
+            padding:
+                28px 38px;
+        }
+
+
+        .top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom: 35px;
+        }
+
+
+        .eyebrow {
+
+            color: #7d75ff;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 10px;
+        }
+
+
+        h1 {
+
+            margin: 0;
+
+            font-size: 35px;
+
+            letter-spacing: -1px;
+        }
+
+
+        .subtitle {
+
+            margin-top: 9px;
+
+            color: #8e95ae;
+
+            font-size: 14px;
+        }
+
+
+        .status {
+
+            padding:
+                10px 15px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 30px;
+
+            color: #9da4bd;
+
+            background:
+                rgba(255,255,255,0.025);
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           UPLOAD
+        ========================= */
+
+        .upload-card {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20,24,48,0.96),
+                    rgba(11,14,30,0.96)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 24px;
+
+            padding: 38px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            margin-bottom: 25px;
+        }
+
+
+        .upload-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(105,95,255,0.12);
+
+            filter: blur(70px);
+
+            right: -100px;
+            top: -120px;
+        }
+
+
+        .upload-area {
+
+            border:
+                1px dashed
+                rgba(120,112,255,0.42);
+
+            border-radius: 20px;
+
+            min-height: 245px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+
+        .upload-area:hover,
+        .upload-area.dragover {
+
+            border-color: #8178ff;
+
+            background:
+                rgba(113,102,255,0.06);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .upload-icon {
+
+            width: 65px;
+            height: 65px;
+
+            border-radius: 18px;
+
+            display: grid;
+
+            place-items: center;
+
+            background:
+                rgba(117,105,255,0.12);
+
+            border:
+                1px solid
+                rgba(117,105,255,0.2);
+
+            margin-bottom: 18px;
+        }
+
+
+        .upload-icon svg {
+
+            width: 30px;
+            height: 30px;
+
+            stroke: #8b83ff;
+        }
+
+
+        .upload-area h2 {
+
+            margin: 0;
+
+            font-size: 19px;
+        }
+
+
+        .upload-area p {
+
+            color: #7f869e;
+
+            font-size: 13px;
+
+            margin:
+                9px 0 18px;
+        }
+
+
+        .browse {
+
+            padding:
+                11px 20px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #756aff,
+                    #4dbdfd
+                );
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        #resumeInput {
+
+            display: none;
+        }
+
+
+        .file-name {
+
+            margin-top: 15px;
+
+            color: #b6bbd0;
+
+            font-size: 13px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           VALIDATION
+        ========================= */
+
+        .validation {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding:
+                16px 18px;
+
+            border-radius: 14px;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        .validation.error {
+
+            display: block;
+
+            color: #ffb4b4;
+
+            background:
+                rgba(255,70,70,0.07);
+
+            border:
+                1px solid
+                rgba(255,70,70,0.2);
+        }
+
+
+        .validation.success {
+
+            display: block;
+
+            color: #a9f7d2;
+
+            background:
+                rgba(40,220,140,0.06);
+
+            border:
+                1px solid
+                rgba(40,220,140,0.18);
+        }
+
+
+        .validation strong {
+
+            display: block;
+
+            margin-bottom: 3px;
+        }
+
+
+        /* =========================
+           ANALYZE BUTTON
+        ========================= */
+
+        .analyze-btn {
+
+            margin-top: 20px;
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #756aff,
+                    #3dbff5
+                );
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            display: none;
+        }
+
+
+        .analyze-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 12px 35px
+                rgba(91,99,255,0.2);
+        }
+
+
+        .analyze-btn:disabled {
+
+            opacity: 0.6;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+
+            display: none;
+
+            text-align: center;
+
+            color: #9299b1;
+
+            padding: 20px;
+        }
+
+
+        .spinner {
+
+            width: 25px;
+            height: 25px;
+
+            border:
+                3px solid
+                rgba(255,255,255,0.1);
+
+            border-top-color:
+                #7b71ff;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+            margin:
+                0 auto 10px;
+        }
+
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        /* =========================================================
+           ATS RESUME BUILDER
+           NEW FEATURE
+        ========================================================= */
+
+        .ats-builder {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20,24,48,0.96),
+                    rgba(11,14,30,0.96)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 24px;
+
+            padding: 32px;
+
+            margin-bottom: 30px;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .ats-builder::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 320px;
+
+            height: 320px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(56,189,248,0.07);
+
+            filter: blur(80px);
+
+            right: -120px;
+
+            top: -140px;
+
+            pointer-events: none;
+        }
+
+
+        .ats-header {
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-bottom: 28px;
+        }
+
+
+        .ats-header .eyebrow {
+
+            margin-bottom: 8px;
+        }
+
+
+        .ats-header h2 {
+
+            margin: 0;
+
+            font-size: 24px;
+
+            letter-spacing: -0.5px;
+        }
+
+
+        .ats-header p {
+
+            margin:
+                8px 0 0;
+
+            color: #858ca5;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            max-width: 760px;
+        }
+
+
+        .ats-form {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .ats-section {
+
+            padding:
+                24px 0;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.06);
+        }
+
+
+        .ats-section:first-child {
+
+            border-top: none;
+
+            padding-top: 0;
+        }
+
+
+        .ats-section-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .ats-section-number {
+
+            width: 27px;
+
+            height: 27px;
+
+            border-radius: 9px;
+
+            display: grid;
+
+            place-items: center;
+
+            background:
+                rgba(117,105,255,0.12);
+
+            border:
+                1px solid
+                rgba(117,105,255,0.2);
+
+            color: #a9a5ff;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+
+        .ats-section-title h3 {
+
+            margin: 0;
+
+            font-size: 15px;
+        }
+
+
+        .ats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+
+        .ats-field {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .ats-field.full {
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        .ats-field label {
+
+            color: #a7aec4;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: .4px;
+        }
+
+
+        .ats-field label span {
+
+            color: #626a82;
+
+            font-weight: 500;
+        }
+
+
+        .ats-field input,
+        .ats-field textarea {
+
+            width: 100%;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 11px;
+
+            background:
+                rgba(255,255,255,0.025);
+
+            color: #f5f7ff;
+
+            outline: none;
+
+            padding:
+                12px 13px;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 13px;
+
+            transition:
+                .2s ease;
+
+        }
+
+
+        .ats-field input {
+
+            height: 44px;
+        }
+
+
+        .ats-field textarea {
+
+            min-height: 110px;
+
+            resize: vertical;
+
+            line-height: 1.6;
+        }
+
+
+        .ats-field input:focus,
+        .ats-field textarea:focus {
+
+            border-color:
+                rgba(126,116,255,.6);
+
+            background:
+                rgba(255,255,255,.035);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(118,108,255,.08);
+        }
+
+
+        .ats-field input::placeholder,
+        .ats-field textarea::placeholder {
+
+            color: #555d74;
+        }
+
+
+        .ats-experience-box {
+
+            padding:
+                17px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,.02);
+
+            margin-bottom: 17px;
+        }
+
+
+        .ats-experience-question {
+
+            color: #dce1f0;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 13px;
+        }
+
+
+        .ats-radio-row {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .ats-radio-option {
+
+            position: relative;
+
+            cursor: pointer;
+        }
+
+
+        .ats-radio-option input {
+
+            position: absolute;
+
+            opacity: 0;
+
+            pointer-events: none;
+        }
+
+
+        .ats-radio-label {
+
+            display: block;
+
+            padding:
+                11px 15px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.025);
+
+            color: #9299b1;
+
+            font-size: 12px;
+
+            transition: .2s ease;
+        }
+
+
+        .ats-radio-option input:checked
+        + .ats-radio-label {
+
+            color: #ffffff;
+
+            border-color:
+                rgba(118,108,255,.5);
+
+            background:
+                rgba(118,108,255,.1);
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(118,108,255,.1);
+        }
+
+
+        .ats-experience-fields {
+
+            display: none;
+        }
+
+
+        .ats-experience-fields.show {
+
+            display: block;
+        }
+
+
+        .ats-helper {
+
+            margin-top: 7px;
+
+            color: #606980;
+
+            font-size: 10px;
+
+            line-height: 1.5;
+        }
+
+
+        .ats-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            padding-top: 25px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.06);
+        }
+
+
+        .ats-btn {
+
+            border: none;
+
+            border-radius: 11px;
+
+            padding:
+                13px 20px;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                .25s ease;
+        }
+
+
+        .ats-btn:hover {
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .ats-btn.primary {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #756aff,
+                    #3dbff5
+                );
+
+            color: #fff;
+
+            box-shadow:
+                0 10px 30px
+                rgba(91,99,255,.15);
+        }
+
+
+        .ats-btn.secondary {
+
+            background:
+                rgba(255,255,255,.035);
+
+            color: #c2c7d8;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+        }
+
+
+        .ats-btn:disabled {
+
+            opacity: .55;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        .ats-message {
+
+            display: none;
+
+            width: 100%;
+
+            padding:
+                12px 14px;
+
+            border-radius: 11px;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        .ats-message.show {
+
+            display: block;
+        }
+
+
+        .ats-message.success {
+
+            color: #a9f7d2;
+
+            background:
+                rgba(40,220,140,.06);
+
+            border:
+                1px solid
+                rgba(40,220,140,.18);
+        }
+
+
+        .ats-message.error {
+
+            color: #ffb4b4;
+
+            background:
+                rgba(255,70,70,.07);
+
+            border:
+                1px solid
+                rgba(255,70,70,.2);
+        }
+
+
+        .ats-message.info {
+
+            color: #b9dfff;
+
+            background:
+                rgba(56,189,248,.06);
+
+            border:
+                1px solid
+                rgba(56,189,248,.16);
+        }
+
+
+        .ats-saved-status {
+
+            margin-left: auto;
+
+            color: #606980;
+
+            font-size: 10px;
+
+            letter-spacing: .5px;
+        }
+
+
+        /* =========================
+           ATS PREVIEW
+        ========================= */
+
+        .ats-preview {
+
+            display: none;
+
+            margin-top: 25px;
+
+            padding-top: 25px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,.06);
+        }
+
+
+        .ats-preview.show {
+
+            display: block;
+        }
+
+
+        .ats-preview-title {
+
+            color: #858ca5;
+
+            font-size: 10px;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+
+            font-weight: 800;
+
+            margin-bottom: 14px;
+        }
+
+
+        .ats-resume-paper {
+
+            background: #ffffff;
+
+            color: #111827;
+
+            border-radius: 5px;
+
+            padding: 42px 46px;
+
+            max-width: 760px;
+
+            margin: 0 auto;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.28);
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        .ats-paper-name {
+
+            margin: 0;
+
+            text-align: center;
+
+            font-size: 25px;
+
+            letter-spacing: .3px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+
+        .ats-paper-title {
+
+            margin:
+                5px 0 7px;
+
+            text-align: center;
+
+            color: #374151;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .ats-paper-contact {
+
+            text-align: center;
+
+            color: #4b5563;
+
+            font-size: 9px;
+
+            line-height: 1.6;
+
+            margin-bottom: 21px;
+        }
+
+
+        .ats-paper-section {
+
+            margin-top: 17px;
+        }
+
+
+        .ats-paper-section h4 {
+
+            margin:
+                0 0 7px;
+
+            padding-bottom: 4px;
+
+            border-bottom:
+                1px solid
+                #111827;
+
+            color: #111827;
+
+            font-size: 10px;
+
+            letter-spacing: .7px;
+
+            text-transform: uppercase;
+        }
+
+
+        .ats-paper-section p {
+
+            margin: 0;
+
+            color: #252b35;
+
+            font-size: 9px;
+
+            line-height: 1.55;
+
+            white-space: pre-line;
+        }
+
+
+        .ats-paper-section .paper-content {
+
+            color: #252b35;
+
+            font-size: 9px;
+
+            line-height: 1.55;
+
+            white-space: pre-line;
+        }
+
+
+        .ats-paper-links {
+
+            color: #374151;
+
+        }
+
+
+        .ats-paper-experience {
+
+            margin-bottom: 8px;
+        }
+
+
+        .ats-paper-experience strong {
+
+            display: block;
+
+            font-size: 9px;
+
+            color: #111827;
+        }
+
+
+        .ats-paper-experience span {
+
+            display: block;
+
+            font-size: 8px;
+
+            color: #4b5563;
+
+            margin:
+                2px 0 3px;
+        }
+
+
+        .ats-paper-experience div {
+
+            font-size: 9px;
+
+            line-height: 1.5;
+
+            white-space: pre-line;
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        #result {
+
+            display: none;
+        }
+
+
+        .result-header {
+
+            margin:
+                35px 0 18px;
+        }
+
+
+        .result-header h2 {
+
+            margin: 0;
+
+            font-size: 22px;
+        }
+
+
+        .result-header p {
+
+            color: #858ca5;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .stat {
+
+            padding: 21px;
+
+            border-radius: 17px;
+
+            background:
+                rgba(17,21,43,0.82);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.07);
+        }
+
+
+        .stat-label {
+
+            color: #747c96;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+
+        .stat-value {
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            margin-top: 9px;
+        }
+
+
+        /* =========================
+           RESULT GRID
+        ========================= */
+
+        .result-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 18px;
+        }
+
+
+        .panel {
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(17,21,43,0.82);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.07);
+        }
+
+
+        .panel h3 {
+
+            margin:
+                0 0 18px;
+
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           SKILLS
+        ========================= */
+
+        .skills {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+
+        .skill {
+
+            padding:
+                8px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            background:
+                rgba(112,101,255,0.1);
+
+            color: #b9b4ff;
+
+            border:
+                1px solid
+                rgba(112,101,255,0.16);
+        }
+
+
+        /* =========================
+           SECTIONS
+        ========================= */
+
+        .section-row {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            padding:
+                11px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.05);
+
+            font-size: 13px;
+        }
+
+
+        .yes {
+            color: #71e9b3;
+        }
+
+
+        .no {
+            color: #ff9696;
+        }
+
+
+        /* =========================
+           SUGGESTIONS
+        ========================= */
+
+        .suggestion {
+
+            padding: 13px;
+
+            border-radius: 11px;
+
+            background:
+                rgba(255,255,255,0.025);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.05);
+
+            margin-bottom: 9px;
+
+            color: #b3b8cb;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           NEXT MOVE
+        ========================= */
+
+        .next-section {
+
+            margin-top: 35px;
+        }
+
+
+        .next-heading {
+
+            margin-bottom: 20px;
+        }
+
+
+        .next-heading .eyebrow {
+
+            margin-bottom: 8px;
+        }
+
+
+        .next-heading h2 {
+
+            margin: 0;
+
+            font-size: 26px;
+
+            letter-spacing: -0.5px;
+        }
+
+
+        .next-heading p {
+
+            color: #858ca5;
+
+            font-size: 13px;
+
+            margin-top: 8px;
+        }
+
+
+        .action-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 16px;
+        }
+
+
+        .action-card {
+
+            position: relative;
+
+            padding: 23px;
+
+            min-height: 205px;
+
+            border-radius: 20px;
+
+            text-decoration: none;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20,24,49,0.96),
+                    rgba(11,14,30,0.96)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            overflow: hidden;
+
+            transition:
+                transform 0.3s,
+                border-color 0.3s,
+                box-shadow 0.3s;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .action-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 130px;
+            height: 130px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(112,102,255,0.11);
+
+            filter: blur(45px);
+
+            right: -50px;
+            top: -50px;
+        }
+
+
+        .action-card:hover {
+
+            transform:
+                translateY(-6px);
+
+            border-color:
+                rgba(126,116,255,0.4);
+
+            box-shadow:
+                0 18px 50px
+                rgba(0,0,0,0.25);
+        }
+
+
+        .action-card.primary {
+
+            border-color:
+                rgba(118,108,255,0.28);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(36,31,80,0.95),
+                    rgba(14,17,37,0.98)
+                );
+        }
+
+
+        .action-top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .action-label {
+
+            font-size: 10px;
+
+            color: #777e99;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                1.5px;
+        }
+
+
+        .action-arrow {
+
+            font-size: 19px;
+
+            color: #8179ff;
+        }
+
+
+        .action-card h3 {
+
+            margin:
+                24px 0 9px;
+
+            font-size: 17px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .action-card p {
+
+            margin: 0;
+
+            color: #858ca5;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .action-footer {
+
+            margin-top: auto;
+
+            padding-top: 17px;
+
+            color: #a9a5ff;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* =========================
+           PROFILE INSIGHT
+        ========================= */
+
+        .profile-insight {
+
+            margin-top: 18px;
+
+            padding: 20px 23px;
+
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(112,102,255,0.09),
+                    rgba(52,195,255,0.04)
+                );
+
+            border:
+                1px solid
+                rgba(112,102,255,0.14);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 20px;
+        }
+
+
+        .profile-insight-text h3 {
+
+            margin:
+                0 0 7px;
+
+            font-size: 15px;
+        }
+
+
+        .profile-insight-text p {
+
+            margin: 0;
+
+            color: #858ca5;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        .profile-badge {
+
+            white-space: nowrap;
+
+            padding:
+                9px 13px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.07);
+
+            color: #a9a5ff;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:1100px) {
+
+            .action-grid {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+        }
+
+
+        @media(max-width:900px) {
+
+            .sidebar {
+
+                width: 200px;
+            }
+
+
+            .main {
+
+                margin-left: 200px;
+
+                width:
+                    calc(100% - 200px);
+
+                padding: 25px;
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .ats-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .ats-field.full {
+
+                grid-column:
+                    auto;
+            }
+
+        }
+
+
+        @media(max-width:700px) {
+
+            .sidebar {
+
+                display: none;
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            .result-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .action-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .profile-insight {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+
+            .ats-builder {
+
+                padding: 22px 17px;
+            }
+
+
+            .ats-resume-paper {
+
+                padding: 28px 22px;
+            }
+
+
+            .ats-saved-status {
+
+                width: 100%;
+
+                margin-left: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================= -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                CP
+            </div>
+
+            <div>
+
+                <span>
+                    CareerPilot
+                </span>
+
+                <small>
+                    AI CAREER INTELLIGENCE
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             WORKSPACE
+        ===================================================== -->
+
+        <div class="nav-title">
+            Workspace
+        </div>
+
+
+        <nav class="nav">
+
+
+            <!-- DASHBOARD -->
+
+            <a href="dashboard.html">
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <rect
+                            x="3"
+                            y="3"
+                            width="7"
+                            height="7">
+                        </rect>
+
+                        <rect
+                            x="14"
+                            y="3"
+                            width="7"
+                            height="7">
+                        </rect>
+
+                        <rect
+                            x="3"
+                            y="14"
+                            width="7"
+                            height="7">
+                        </rect>
+
+                        <rect
+                            x="14"
+                            y="14"
+                            width="7"
+                            height="7">
+                        </rect>
+
+                    </svg>
+
+                </span>
+
+                Dashboard
+
+            </a>
+
+
+            <!-- AI CAREER COACH -->
+
+            <a href="coach.html">
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M4 5h16v11H8l-4 4z">
+                        </path>
+
+                        <path
+                            d="M8 9h8M8 12h5">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                AI Career Coach
+
+            </a>
+
+
+            <!-- RESUME ANALYZER -->
+
+            <a
+                href="resume.html"
+                class="active"
+            >
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M6 3h9l3 3v15H6z">
+                        </path>
+
+                        <path
+                            d="M14 3v4h4M9 12h6M9 16h6">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                Resume Analyzer
+
+            </a>
+
+
+            <!-- SKILL GAP ANALYZER -->
+
+            <a href="skill-gap.html">
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M4 18V6M4 18h16">
+                        </path>
+
+                        <path
+                            d="M7 15l3-4 3 2 5-7">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                Skill Gap Analyzer
+
+            </a>
+
+
+            <!-- CAREER ROADMAP -->
+
+            <a href="roadmap.html">
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="8">
+                        </circle>
+
+                        <path
+                            d="M12 7v5l3 2">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                Career Roadmap
+
+            </a>
+
+
+            <!-- JOB MATCHING -->
+
+            <a href="jobs.html">
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7">
+                        </circle>
+
+                        <path
+                            d="M16 16l5 5">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                Job Matching
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- =====================================================
+             ACCOUNT
+        ===================================================== -->
+
+        <div
+            class="nav-title"
+            style="margin-top:22px;"
+        >
+            Account
+        </div>
+
+
+        <nav class="nav">
+
+
+            <!-- PROFILE -->
+
+            <a href="profile.html">
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="3">
+                        </circle>
+
+                        <path
+                            d="M5 20c1-4 4-6 7-6s6 2 7 6">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                Profile
+
+            </a>
+
+
+            <!-- SIGN OUT -->
+
+            <a
+                href="#"
+                id="logoutBtn"
+            >
+
+                <span class="nav-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M10 5H5v14h5">
+                        </path>
+
+                        <path
+                            d="M13 8l4 4-4 4M17 12H8">
+                        </path>
+
+                    </svg>
+
+                </span>
+
+                Sign out
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- =====================================================
+             USER PROFILE
+        ===================================================== -->
+
+        <div class="sidebar-bottom">
+
+            <div class="profile-mini">
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    U
+                </div>
+
+                <div>
+
+                    <strong id="userFullName">
+                        User
+                    </strong>
+
+                    <span>
+                        CareerPilot Member
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================= -->
+
+    <main class="main">
+
+
+        <!-- HEADER -->
+
+        <div class="top">
+
+            <div>
+
+                <div class="eyebrow">
+                    AI Career Intelligence
+                </div>
+
+                <h1>
+                    Resume Analyzer
+                </h1>
+
+                <div class="subtitle">
+                    Understand how your CV positions you for your next career move.
+                </div>
+
+            </div>
+
+
+            <div class="status">
+                AI ANALYSIS SYSTEM • ONLINE
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             UPLOAD
+        ========================= -->
+
+        <section class="upload-card">
+
+
+            <div
+                class="upload-area"
+                id="uploadArea"
+            >
+
+                <div class="upload-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                    >
+
+                        <path d="M12 16V4"/>
+
+                        <path d="M7 9l5-5 5 5"/>
+
+                        <path d="M5 20h14"/>
+
+                    </svg>
+
+                </div>
+
+
+                <h2>
+                    Upload your resume
+                </h2>
+
+
+                <p>
+                    PDF format only • Maximum size 10 MB
+                </p>
+
+
+                <div class="browse">
+                    Choose PDF
+                </div>
+
+
+                <input
+                    type="file"
+                    id="resumeInput"
+                    accept=".pdf,application/pdf"
+                >
+
+            </div>
+
+
+            <div
+                class="file-name"
+                id="fileName"
+            ></div>
+
+
+            <div
+                class="validation"
+                id="validation"
+            ></div>
+
+
+            <button
+                class="analyze-btn"
+                id="analyzeBtn"
+            >
+                Analyze Resume
+            </button>
+
+
+            <div
+                class="loading"
+                id="loading"
+            >
+
+                <div class="spinner"></div>
+
+                Analyzing your resume...
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+             ATS RESUME BUILDER
+        ========================================================= -->
+
+        <section class="ats-builder">
+
+            <div class="ats-header">
+
+                <div class="eyebrow">
+                    CareerPilot Resume Studio
+                </div>
+
+                <h2>
+                    Build an ATS-Friendly Resume
+                </h2>
+
+                <p>
+                    Create a clean, professional, single-column resume designed
+                    for applicant tracking systems. Your information is saved
+                    to your CareerPilot profile.
+                </p>
+
+            </div>
+
+
+            <form
+                class="ats-form"
+                id="atsResumeForm"
+            >
+
+
+                <!-- =================================================
+                     PERSONAL INFORMATION
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            01
+                        </div>
+
+                        <h3>
+                            Personal Information
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+
+                        <div class="ats-field">
+
+                            <label for="atsFullName">
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsFullName"
+                                placeholder="Harshada Hemant Hinge"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsProfessionalTitle">
+                                Professional Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsProfessionalTitle"
+                                placeholder="MCA Student | Cloud & Data Engineering"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsEmail">
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="atsEmail"
+                                placeholder="yourname@gmail.com"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsPhone">
+                                Phone
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsPhone"
+                                placeholder="+91 XXXXX XXXXX"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsLocation">
+                                Location
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsLocation"
+                                placeholder="Maharashtra, India"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsLinkedin">
+                                LinkedIn
+                                <span>(optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsLinkedin"
+                                placeholder="linkedin.com/in/yourname"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field full">
+
+                            <label for="atsGithub">
+                                GitHub
+                                <span>(optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsGithub"
+                                placeholder="github.com/yourusername"
+                            >
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PROFESSIONAL SUMMARY
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            02
+                        </div>
+
+                        <h3>
+                            Professional Summary
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+                        <div class="ats-field full">
+
+                            <label for="atsSummary">
+                                Professional Summary
+                            </label>
+
+                            <textarea
+                                id="atsSummary"
+                                placeholder="Write a concise 2–4 line summary describing your education, technical strengths, career interests and the value you can bring to an organization."
+                            ></textarea>
+
+                            <div class="ats-helper">
+                                Keep this focused on your skills, career direction and professional strengths.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     EDUCATION
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            03
+                        </div>
+
+                        <h3>
+                            Education
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+                        <div class="ats-field full">
+
+                            <label for="atsEducation">
+                                Education Details
+                            </label>
+
+                            <textarea
+                                id="atsEducation"
+                                placeholder="MCA — College Name, University Name — 2025–2027&#10;BCA — College Name, University Name — 2022–2025"
+                            ></textarea>
+
+                            <div class="ats-helper">
+                                Add one qualification per line. Include degree, institution, university and year.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TECHNICAL SKILLS
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            04
+                        </div>
+
+                        <h3>
+                            Technical Skills
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+                        <div class="ats-field full">
+
+                            <label for="atsSkills">
+                                Technical Skills
+                            </label>
+
+                            <textarea
+                                id="atsSkills"
+                                placeholder="Python, SQL, Java, HTML, CSS, JavaScript, Git, GitHub, AWS, Linux, Pandas, NumPy"
+                            ></textarea>
+
+                            <div class="ats-helper">
+                                Use commas or separate lines. Include only skills you can confidently discuss in an interview.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     EXPERIENCE
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            05
+                        </div>
+
+                        <h3>
+                            Work Experience
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-experience-box">
+
+                        <div class="ats-experience-question">
+                            Do you have work experience?
+                        </div>
+
+
+                        <div class="ats-radio-row">
+
+
+                            <label class="ats-radio-option">
+
+                                <input
+                                    type="radio"
+                                    name="atsExperience"
+                                    id="atsExperienceYes"
+                                    value="yes"
+                                >
+
+                                <span class="ats-radio-label">
+                                    Yes, I have experience
+                                </span>
+
+                            </label>
+
+
+                            <label class="ats-radio-option">
+
+                                <input
+                                    type="radio"
+                                    name="atsExperience"
+                                    id="atsExperienceNo"
+                                    value="no"
+                                    checked
+                                >
+
+                                <span class="ats-radio-label">
+                                    No — I am a Fresher
+                                </span>
+
+                            </label>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="ats-experience-fields"
+                        id="atsExperienceFields"
+                    >
+
+                        <div class="ats-grid">
+
+
+                            <div class="ats-field">
+
+                                <label for="atsExperienceRole">
+                                    Job Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="atsExperienceRole"
+                                    placeholder="Data Analyst Intern"
+                                >
+
+                            </div>
+
+
+                            <div class="ats-field">
+
+                                <label for="atsExperienceCompany">
+                                    Company
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="atsExperienceCompany"
+                                    placeholder="Company Name"
+                                >
+
+                            </div>
+
+
+                            <div class="ats-field">
+
+                                <label for="atsExperienceDuration">
+                                    Duration
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="atsExperienceDuration"
+                                    placeholder="Jan 2025 – Jun 2025"
+                                >
+
+                            </div>
+
+
+                            <div class="ats-field">
+
+                                <label for="atsExperienceLocation">
+                                    Location
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="atsExperienceLocation"
+                                    placeholder="Pune, Maharashtra"
+                                >
+
+                            </div>
+
+
+                            <div class="ats-field full">
+
+                                <label for="atsWorkExperience">
+                                    Responsibilities & Achievements
+                                </label>
+
+                                <textarea
+                                    id="atsWorkExperience"
+                                    placeholder="Describe your responsibilities, technologies used and measurable contributions. Use one bullet point per line."
+                                ></textarea>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     INTERNSHIPS
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            06
+                        </div>
+
+                        <h3>
+                            Internships
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+                        <div class="ats-field">
+
+                            <label for="atsInternshipTitle">
+                                Internship Title
+                                <span>(optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsInternshipTitle"
+                                placeholder="Cloud Intern"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsInternshipCompany">
+                                Company
+                                <span>(optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsInternshipCompany"
+                                placeholder="Company Name"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsInternshipDuration">
+                                Duration
+                                <span>(optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsInternshipDuration"
+                                placeholder="Jun 2025 – Aug 2025"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field">
+
+                            <label for="atsInternshipLocation">
+                                Location
+                                <span>(optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="atsInternshipLocation"
+                                placeholder="Remote / Pune"
+                            >
+
+                        </div>
+
+
+                        <div class="ats-field full">
+
+                            <label for="atsInternships">
+                                Internship Details
+                                <span>(optional)</span>
+                            </label>
+
+                            <textarea
+                                id="atsInternships"
+                                placeholder="Describe your internship work, responsibilities, tools and outcomes. Use one bullet point per line."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PROJECTS
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            07
+                        </div>
+
+                        <h3>
+                            Projects
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+                        <div class="ats-field full">
+
+                            <label for="atsProjects">
+                                Projects
+                            </label>
+
+                            <textarea
+                                id="atsProjects"
+                                placeholder="CareerPilot AI — AI-powered career guidance platform built using FastAPI, SQLite, HTML, CSS and JavaScript.&#10;&#10;DataVision Pro — Data analysis dashboard built using Flask, Pandas and Chart.js."
+                            ></textarea>
+
+                            <div class="ats-helper">
+                                Add project name followed by a short description, technologies and important features.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CERTIFICATIONS
+                ================================================= -->
+
+                <div class="ats-section">
+
+                    <div class="ats-section-title">
+
+                        <div class="ats-section-number">
+                            08
+                        </div>
+
+                        <h3>
+                            Certifications
+                        </h3>
+
+                    </div>
+
+
+                    <div class="ats-grid">
+
+                        <div class="ats-field full">
+
+                            <label for="atsCertifications">
+                                Certifications
+                            </label>
+
+                            <textarea
+                                id="atsCertifications"
+                                placeholder="AWS Cloud Practitioner&#10;IBM SkillsBuild — Customer Engagement&#10;TCS MasterCraft DataPlus Overview Course"
+                            ></textarea>
+
+                            <div class="ats-helper">
+                                Add one certification per line.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================= -->
+
+                <div class="ats-actions">
+
+
+                    <button
+                        type="button"
+                        class="ats-btn primary"
+                        id="atsSaveBtn"
+                    >
+                        Save Resume
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="ats-btn secondary"
+                        id="atsPreviewBtn"
+                    >
+                        Preview Resume
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="ats-btn secondary"
+                        id="atsPdfBtn"
+                    >
+                        Generate ATS PDF
+                    </button>
+
+
+                    <div
+                        class="ats-saved-status"
+                        id="atsSavedStatus"
+                    >
+                        Not saved yet
+                    </div>
+
+
+                    <div
+                        class="ats-message"
+                        id="atsMessage"
+                    ></div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ATS PREVIEW
+                ================================================= -->
+
+                <div
+                    class="ats-preview"
+                    id="atsPreview"
+                >
+
+                    <div class="ats-preview-title">
+                        ATS Resume Preview
+                    </div>
+
+
+                    <div
+                        class="ats-resume-paper"
+                        id="atsResumePaper"
+                    >
+
+                    </div>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =========================
+             RESULT
+        ========================= -->
+
+        <section id="result">
+
+
+            <div class="result-header">
+
+                <h2>
+                    Resume Intelligence Report
+                </h2>
+
+                <p>
+                    CareerPilot analyzed the content and structure of your uploaded CV.
+                </p>
+
+            </div>
+
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        Resume Score
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="score"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        Skills Found
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="skillCount"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        Pages
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="pages"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        Content
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="contentSize"
+                    >
+                        --
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RESULT GRID -->
+
+            <div class="result-grid">
+
+
+                <!-- SKILLS -->
+
+                <div class="panel">
+
+                    <h3>
+                        Detected Skills
+                    </h3>
+
+                    <div
+                        class="skills"
+                        id="skills"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- STRUCTURE -->
+
+                <div class="panel">
+
+                    <h3>
+                        Resume Structure
+                    </h3>
+
+                    <div
+                        id="sections"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- SUGGESTIONS -->
+
+                <div class="panel">
+
+                    <h3>
+                        AI Recommendations
+                    </h3>
+
+                    <div
+                        id="suggestions"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- SUMMARY -->
+
+                <div class="panel">
+
+                    <h3>
+                        CareerPilot Insight
+                    </h3>
+
+                    <p
+                        id="summary"
+                        style="
+                            color:#9ba1b8;
+                            font-size:13px;
+                            line-height:1.7;
+                            margin:0;
+                        "
+                    ></p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 PROFILE INSIGHT
+            ========================= -->
+
+            <div class="profile-insight">
+
+                <div class="profile-insight-text">
+
+                    <h3>
+                        Your resume is now part of your CareerPilot profile.
+                    </h3>
+
+                    <p>
+                        Use this analysis to discover your missing skills,
+                        plan your career path and find roles that match your profile.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="profile-badge"
+                    id="profileBadge"
+                >
+                    PROFILE ANALYZED
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 NEXT MOVE
+            ========================= -->
+
+            <div class="next-section">
+
+
+                <div class="next-heading">
+
+                    <div class="eyebrow">
+                        Continue Your Career Journey
+                    </div>
+
+                    <h2>
+                        What's your next move?
+                    </h2>
+
+                    <p>
+                        CareerPilot has analyzed your CV. Choose what you want to explore next.
+                    </p>
+
+                </div>
+
+
+                <!-- SKILL GAP -->
+
+                <a
+                    href="skill-gap.html"
+                    class="action-card primary"
+                >
+
+                    <div class="action-top">
+
+                        <span class="action-label">
+                            Career Intelligence
+                        </span>
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Analyze My Skill Gap
+                    </h3>
+
+
+                    <p>
+                        Compare your current skills with the skills
+                        required for your target career.
+                    </p>
+
+
+                    <div class="action-footer">
+                        Discover missing skills →
+                    </div>
+
+                </a>
+
+
+
+                <!-- ROADMAP -->
+
+                <a
+                    href="roadmap.html"
+                    class="action-card"
+                >
+
+                    <div class="action-top">
+
+                        <span class="action-label">
+                            Career Planning
+                        </span>
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Build Career Roadmap
+                    </h3>
+
+
+                    <p>
+                        Turn your current profile into a structured
+                        learning and career progression plan.
+                    </p>
+
+
+                    <div class="action-footer">
+                        Create my roadmap →
+                    </div>
+
+                </a>
+
+
+
+                <!-- JOB MATCHING -->
+
+                <a
+                    href="jobs.html"
+                    class="action-card"
+                >
+
+                    <div class="action-top">
+
+                        <span class="action-label">
+                            Opportunity Intelligence
+                        </span>
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Find Matching Jobs
+                    </h3>
+
+
+                    <p>
+                        Explore job roles that align with your
+                        detected skills and career direction.
+                    </p>
+
+
+                    <div class="action-footer">
+                        Explore job matches →
+                    </div>
+
+                </a>
+
+
+
+                <!-- AI COACH -->
+
+                <a
+                    href="coach.html"
+                    class="action-card"
+                >
+
+                    <div class="action-top">
+
+                        <span class="action-label">
+                            AI Guidance
+                        </span>
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Ask AI Career Coach
+                    </h3>
+
+
+                    <p>
+                        Get personalized guidance about careers,
+                        interviews, skills and your next step.
+                    </p>
+
+
+                    <div class="action-footer">
+                        Talk to CareerPilot →
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     jsPDF
+     Used only for generating the ATS resume PDF.
+========================================================= -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+<script>
+
+
+/* =====================================================
+   EXISTING RESUME ANALYZER
+   DO NOT CHANGE
+===================================================== */
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const uploadArea =
+    document.getElementById("uploadArea");
+
+const resumeInput =
+    document.getElementById("resumeInput");
+
+const fileName =
+    document.getElementById("fileName");
+
+const validation =
+    document.getElementById("validation");
+
+const analyzeBtn =
+    document.getElementById("analyzeBtn");
+
+const loading =
+    document.getElementById("loading");
+
+const result =
+    document.getElementById("result");
+
+
+
+/* =====================================================
+   OPEN FILE
+===================================================== */
+
+uploadArea.addEventListener(
+    "click",
+    function () {
+
+        resumeInput.click();
+
+    }
+);
+
+
+
+/* =====================================================
+   FILE SELECT
+===================================================== */
+
+resumeInput.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        validateSelectedFile(file);
+
+    }
+);
+
+
+
+/* =====================================================
+   DRAG OVER
+===================================================== */
+
+uploadArea.addEventListener(
+    "dragover",
+    function (event) {
+
+        event.preventDefault();
+
+        uploadArea.classList.add(
+            "dragover"
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   DRAG LEAVE
+===================================================== */
+
+uploadArea.addEventListener(
+    "dragleave",
+    function () {
+
+        uploadArea.classList.remove(
+            "dragover"
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   DROP
+===================================================== */
+
+uploadArea.addEventListener(
+    "drop",
+    function (event) {
+
+        event.preventDefault();
+
+        uploadArea.classList.remove(
+            "dragover"
+        );
+
+        const file =
+            event.dataTransfer.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        resumeInput.files =
+            event.dataTransfer.files;
+
+        validateSelectedFile(file);
+
+    }
+);
+
+
+
+/* =====================================================
+   BASIC VALIDATION
+===================================================== */
+
+function validateSelectedFile(file) {
+
+    validation.className =
+        "validation";
+
+    validation.innerHTML = "";
+
+    analyzeBtn.style.display =
+        "none";
+
+    result.style.display =
+        "none";
+
+
+    fileName.textContent =
+        file.name;
+
+
+    if (
+        file.type !== "application/pdf" &&
+        !file.name
+            .toLowerCase()
+            .endsWith(".pdf")
+    ) {
+
+        showError(
+            "Invalid file",
+            "Please upload your CV in PDF format."
+        );
+
+        return;
+    }
+
+
+    if (
+        file.size >
+        10 * 1024 * 1024
+    ) {
+
+        showError(
+            "File too large",
+            "Please upload a PDF smaller than 10 MB."
+        );
+
+        return;
+    }
+
+
+    detectResume(file);
+
+}
+
+
+
+/* =====================================================
+   DETECT RESUME
+===================================================== */
+
+async function detectResume(file) {
+
+    validation.className =
+        "validation success";
+
+    validation.style.display =
+        "block";
+
+    validation.innerHTML = `
+
+        <strong>
+            Checking document...
+        </strong>
+
+        CareerPilot is checking whether this PDF appears to be a professional resume.
+
+    `;
+
+
+    try {
+
+        const text =
+            await extractPDFText(file);
+
+
+        const normalized =
+            text
+                .toLowerCase()
+                .replace(/\s+/g, " ")
+                .trim();
+
+
+        if (
+            !normalized ||
+            normalized.length < 80
+        ) {
+
+            showError(
+                "Not a Resume",
+                "This PDF does not contain enough readable text to identify it as a CV. Please upload a valid resume."
+            );
+
+            return;
+        }
+
+
+        const resumeKeywords = [
+
+            "resume",
+            "curriculum vitae",
+            "cv",
+            "career objective",
+            "professional summary",
+            "profile summary",
+            "education",
+            "technical skills",
+            "skills",
+            "experience",
+            "work experience",
+            "internship",
+            "projects",
+            "certifications",
+            "achievements",
+            "linkedin",
+            "github",
+            "objective",
+            "professional experience"
+
+        ];
+
+
+        let matchedKeywords = 0;
+
+
+        resumeKeywords.forEach(
+            keyword => {
+
+                if (
+                    normalized.includes(
+                        keyword
+                    )
+                ) {
+
+                    matchedKeywords++;
+
+                }
+
+            }
+        );
+
+
+        const hasEducation =
+            normalized.includes(
+                "education"
+            ) ||
+            normalized.includes(
+                "bachelor"
+            ) ||
+            normalized.includes(
+                "master"
+            ) ||
+            normalized.includes(
+                "bca"
+            ) ||
+            normalized.includes(
+                "mca"
+            ) ||
+            normalized.includes(
+                "b.tech"
+            ) ||
+            normalized.includes(
+                "btech"
+            ) ||
+            normalized.includes(
+                "university"
+            ) ||
+            normalized.includes(
+                "college"
+            );
+
+
+        const hasSkills =
+            normalized.includes(
+                "skills"
+            ) ||
+            normalized.includes(
+                "technical skills"
+            ) ||
+            normalized.includes(
+                "technologies"
+            );
+
+
+        const hasExperience =
+            normalized.includes(
+                "experience"
+            ) ||
+            normalized.includes(
+                "internship"
+            ) ||
+            normalized.includes(
+                "employment"
+            );
+
+
+        const hasProjects =
+            normalized.includes(
+                "projects"
+            ) ||
+            normalized.includes(
+                "project"
+            );
+
+
+        const hasContact =
+            normalized.includes(
+                "linkedin"
+            ) ||
+            normalized.includes(
+                "github"
+            ) ||
+            normalized.includes(
+                "@gmail"
+            ) ||
+            normalized.includes(
+                "@outlook"
+            ) ||
+            normalized.includes(
+                "@yahoo"
+            );
+
+
+        let resumeScore = 0;
+
+
+        if (
+            matchedKeywords >= 2
+        ) {
+
+            resumeScore += 25;
+
+        }
+
+
+        if (
+            matchedKeywords >= 4
+        ) {
+
+            resumeScore += 20;
+
+        }
+
+
+        if (hasEducation) {
+
+            resumeScore += 15;
+
+        }
+
+
+        if (hasSkills) {
+
+            resumeScore += 15;
+
+        }
+
+
+        if (hasExperience) {
+
+            resumeScore += 10;
+
+        }
+
+
+        if (hasProjects) {
+
+            resumeScore += 10;
+
+        }
+
+
+        if (hasContact) {
+
+            resumeScore += 5;
+
+        }
+
+
+        if (
+            resumeScore < 45 ||
+            matchedKeywords < 3
+        ) {
+
+            showError(
+                "Not a Resume",
+                "This PDF does not appear to be a professional resume or CV. Please upload your CV for analysis."
+            );
+
+            return;
+        }
+
+
+        validation.className =
+            "validation success";
+
+
+        validation.innerHTML = `
+
+            <strong>
+                Resume detected ✓
+            </strong>
+
+            Your PDF appears to be a CV.
+            CareerPilot is ready to analyze your career profile.
+
+        `;
+
+
+        analyzeBtn.style.display =
+            "block";
+
+    }
+
+    catch (error) {
+
+        showError(
+            "Unable to read PDF",
+            "CareerPilot could not read this PDF. Please try another resume."
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   PDF.JS
+===================================================== */
+
+let pdfLibraryPromise = null;
+
+
+function ensurePDFLibrary() {
+
+    if (window.pdfjsLib) {
+
+        return Promise.resolve();
+
+    }
+
+
+    if (pdfLibraryPromise) {
+
+        return pdfLibraryPromise;
+
+    }
+
+
+    pdfLibraryPromise =
+        new Promise(
+            (resolve, reject) => {
+
+                const script =
+                    document.createElement(
+                        "script"
+                    );
+
+
+                script.src =
+                    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+
+
+                script.onload =
+                    function () {
+
+                        if (
+                            window.pdfjsLib
+                        ) {
+
+                            pdfjsLib
+                                .GlobalWorkerOptions
+                                .workerSrc =
+                                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+                            resolve();
+
+                        } else {
+
+                            reject(
+                                new Error(
+                                    "PDF library unavailable"
+                                )
+                            );
+
+                        }
+
+                    };
+
+
+                script.onerror =
+                    reject;
+
+
+                document.head.appendChild(
+                    script
+                );
+
+            }
+        );
+
+
+    return pdfLibraryPromise;
+
+}
+
+
+
+/* =====================================================
+   EXTRACT PDF TEXT
+===================================================== */
+
+async function extractPDFText(file) {
+
+    await ensurePDFLibrary();
+
+
+    const arrayBuffer =
+        await file.arrayBuffer();
+
+
+    const pdf =
+        await pdfjsLib
+            .getDocument({
+                data: arrayBuffer
+            })
+            .promise;
+
+
+    let fullText = "";
+
+
+    const pagesToRead =
+        Math.min(
+            pdf.numPages,
+            5
+        );
+
+
+    for (
+        let pageNumber = 1;
+        pageNumber <= pagesToRead;
+        pageNumber++
+    ) {
+
+        const page =
+            await pdf.getPage(
+                pageNumber
+            );
+
+
+        const content =
+            await page.getTextContent();
+
+
+        const pageText =
+            content.items
+                .map(
+                    item => item.str
+                )
+                .join(" ");
+
+
+        fullText +=
+            pageText + " ";
+
+    }
+
+
+    return fullText;
+
+}
+
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function showError(
+    title,
+    message
+) {
+
+    validation.className =
+        "validation error";
+
+    validation.style.display =
+        "block";
+
+
+    validation.innerHTML = `
+
+        <strong>
+            ${title}
+        </strong>
+
+        ${message}
+
+    `;
+
+
+    analyzeBtn.style.display =
+        "none";
+
+}
+
+
+
+/* =====================================================
+   ANALYZE
+===================================================== */
+
+analyzeBtn.addEventListener(
+    "click",
+    async function () {
+
+        const file =
+            resumeInput.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        analyzeBtn.disabled =
+            true;
+
+        analyzeBtn.style.display =
+            "none";
+
+        loading.style.display =
+            "block";
+
+        result.style.display =
+            "none";
+
+        try {
+
+            const userId =
+                localStorage.getItem(
+                    "careerpilot_user_id"
+                );
+
+            if (!userId) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "file",
+                file
+            );
+
+
+            const response =
+                await fetch(
+                    `/resume/analyze?user_id=${encodeURIComponent(userId)}`,
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                let errorMessage =
+                    "Backend connection failed.";
+
+                try {
+
+                    const errorData =
+                        await response.json();
+
+                    errorMessage =
+                        errorData.detail ||
+                        errorData.message ||
+                        errorMessage;
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Error reading backend error:",
+                        error
+                    );
+
+                }
+
+                throw new Error(
+                    errorMessage
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "Resume analysis failed."
+                );
+
+            }
+
+
+            displayResults(data);
+
+        }
+
+        catch (error) {
+
+            showError(
+                "Analysis failed",
+                error.message
+            );
+
+            console.error(
+                "Resume analysis error:",
+                error
+            );
+
+        }
+
+        finally {
+
+            analyzeBtn.disabled =
+                false;
+
+            loading.style.display =
+                "none";
+
+
+            if (
+                validation.classList
+                    .contains("success")
+            ) {
+
+                analyzeBtn.style.display =
+                    "block";
+
+            }
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   DISPLAY RESULTS
+===================================================== */
+
+function displayResults(data) {
+
+    result.style.display =
+        "block";
+
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        data.score + "%";
+
+
+    document.getElementById(
+        "skillCount"
+    ).textContent =
+        data.skills.length;
+
+
+    document.getElementById(
+        "pages"
+    ).textContent =
+        data.pages;
+
+
+    let contentSize =
+        data.text_length || 0;
+
+
+    if (
+        contentSize >= 1000
+    ) {
+
+        contentSize =
+            (
+                contentSize / 1000
+            ).toFixed(1) + "K";
+
+    }
+
+
+    document.getElementById(
+        "contentSize"
+    ).textContent =
+        contentSize;
+
+
+
+    const skillsContainer =
+        document.getElementById(
+            "skills"
+        );
+
+
+    skillsContainer.innerHTML =
+        "";
+
+
+    if (
+        data.skills &&
+        data.skills.length > 0
+    ) {
+
+        data.skills.forEach(
+            skill => {
+
+                const element =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                element.className =
+                    "skill";
+
+
+                element.textContent =
+                    skill;
+
+
+                skillsContainer.appendChild(
+                    element
+                );
+
+            }
+        );
+
+    }
+
+    else {
+
+        skillsContainer.innerHTML = `
+
+            <span
+                style="
+                    color:#7f869e;
+                    font-size:13px;
+                "
+            >
+                No recognized skills found.
+            </span>
+
+        `;
+
+    }
+
+
+
+    const sectionsContainer =
+        document.getElementById(
+            "sections"
+        );
+
+
+    sectionsContainer.innerHTML =
+        "";
+
+
+    Object.entries(
+        data.sections
+    ).forEach(
+        ([section, found]) => {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "section-row";
+
+
+            row.innerHTML = `
+
+                <span>
+                    ${section}
+                </span>
+
+                <strong
+                    class="${
+                        found
+                            ? "yes"
+                            : "no"
+                    }"
+                >
+                    ${
+                        found
+                            ? "Detected"
+                            : "Missing"
+                    }
+                </strong>
+
+            `;
+
+
+            sectionsContainer.appendChild(
+                row
+            );
+
+        }
+    );
+
+
+
+    const suggestionsContainer =
+        document.getElementById(
+            "suggestions"
+        );
+
+
+    suggestionsContainer.innerHTML =
+        "";
+
+
+    data.suggestions.forEach(
+        suggestion => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "suggestion";
+
+
+            element.textContent =
+                suggestion;
+
+
+            suggestionsContainer.appendChild(
+                element
+            );
+
+        }
+    );
+
+
+
+    let summary = "";
+
+
+    if (
+        data.score >= 80
+    ) {
+
+        summary =
+            "Your resume has a strong overall structure. Your next opportunity is to align your skills with a specific target role and identify the technologies that employers expect.";
+
+    }
+
+    else if (
+        data.score >= 60
+    ) {
+
+        summary =
+            "Your resume has a good foundation, but there are areas that can be strengthened. CareerPilot recommends identifying your skill gaps before choosing your next learning path.";
+
+    }
+
+    else {
+
+        summary =
+            "Your resume needs improvement before applying to competitive roles. Strengthen your technical skills, projects, professional links and resume structure.";
+
+    }
+
+
+    document.getElementById(
+        "summary"
+    ).textContent =
+        summary;
+
+
+
+    document.getElementById(
+        "profileBadge"
+    ).textContent =
+        data.skills.length +
+        " SKILLS DETECTED";
+
+
+    const improveResume =
+        document.getElementById("improveResume");
+
+
+    if (improveResume) {
+
+        improveResume.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                document
+                    .getElementById("suggestions")
+                    .parentElement
+                    .scrollIntoView({
+                        behavior: "smooth"
+                    });
+
+            }
+        );
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            result.scrollIntoView({
+                behavior:
+                    "smooth"
+            });
+
+        },
+        100
+    );
+
+}
+
+
+
+/* =====================================================
+   ATS RESUME BUILDER
+   NEW LOGIC
+===================================================== */
+
+const ATS_API_URL =
+    "";
+
+
+const atsForm =
+    document.getElementById(
+        "atsResumeForm"
+    );
+
+
+const atsSaveBtn =
+    document.getElementById(
+        "atsSaveBtn"
+    );
+
+
+const atsPreviewBtn =
+    document.getElementById(
+        "atsPreviewBtn"
+    );
+
+
+const atsPdfBtn =
+    document.getElementById(
+        "atsPdfBtn"
+    );
+
+
+const atsMessage =
+    document.getElementById(
+        "atsMessage"
+    );
+
+
+const atsSavedStatus =
+    document.getElementById(
+        "atsSavedStatus"
+    );
+
+
+const atsPreview =
+    document.getElementById(
+        "atsPreview"
+    );
+
+
+const atsResumePaper =
+    document.getElementById(
+        "atsResumePaper"
+    );
+
+
+const atsExperienceFields =
+    document.getElementById(
+        "atsExperienceFields"
+    );
+
+
+const atsExperienceYes =
+    document.getElementById(
+        "atsExperienceYes"
+    );
+
+
+const atsExperienceNo =
+    document.getElementById(
+        "atsExperienceNo"
+    );
+
+
+
+/* =====================================================
+   ATS INPUT HELPER
+===================================================== */
+
+function atsValue(id) {
+
+    const element =
+        document.getElementById(id);
+
+    return element
+        ? element.value.trim()
+        : "";
+
+}
+
+
+
+/* =====================================================
+   ATS SET VALUE HELPER
+===================================================== */
+
+function atsSetValue(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+
+        element.value =
+            value || "";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   ATS MESSAGE
+===================================================== */
+
+function showAtsMessage(
+    text,
+    type
+) {
+
+    atsMessage.className =
+        "ats-message show " + type;
+
+    atsMessage.textContent =
+        text;
+
+}
+
+
+
+/* =====================================================
+   HIDE ATS MESSAGE
+===================================================== */
+
+function hideAtsMessage() {
+
+    atsMessage.className =
+        "ats-message";
+
+    atsMessage.textContent =
+        "";
+
+}
+
+
+
+/* =====================================================
+   EXPERIENCE TOGGLE
+===================================================== */
+
+function updateAtsExperienceVisibility() {
+
+    if (
+        atsExperienceYes.checked
+    ) {
+
+        atsExperienceFields.classList.add(
+            "show"
+        );
+
+    }
+
+    else {
+
+        atsExperienceFields.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+atsExperienceYes.addEventListener(
+    "change",
+    updateAtsExperienceVisibility
+);
+
+
+atsExperienceNo.addEventListener(
+    "change",
+    updateAtsExperienceVisibility
+);
+
+
+updateAtsExperienceVisibility();
+
+
+
+/* =====================================================
+   COLLECT ATS DATA
+===================================================== */
+
+function collectAtsResumeData() {
+
+    const isFresher =
+        atsExperienceNo.checked;
+
+
+    return {
+
+        user_id:
+            Number(
+                localStorage.getItem(
+                    "careerpilot_user_id"
+                )
+            ),
+
+        full_name:
+            atsValue(
+                "atsFullName"
+            ),
+
+        professional_title:
+            atsValue(
+                "atsProfessionalTitle"
+            ),
+
+        email:
+            atsValue(
+                "atsEmail"
+            ),
+
+        phone:
+            atsValue(
+                "atsPhone"
+            ),
+
+        location:
+            atsValue(
+                "atsLocation"
+            ),
+
+        linkedin:
+            atsValue(
+                "atsLinkedin"
+            ),
+
+        github:
+            atsValue(
+                "atsGithub"
+            ),
+
+        summary:
+            atsValue(
+                "atsSummary"
+            ),
+
+        education:
+            atsValue(
+                "atsEducation"
+            ),
+
+        skills:
+            atsValue(
+                "atsSkills"
+            ),
+
+        work_experience:
+            isFresher
+                ? ""
+                : buildAtsWorkExperience(),
+
+        internships:
+            buildAtsInternship(),
+
+        projects:
+            atsValue(
+                "atsProjects"
+            ),
+
+        certifications:
+            atsValue(
+                "atsCertifications"
+            ),
+
+        is_fresher:
+            isFresher
+
+    };
+
+}
+
+
+
+/* =====================================================
+   BUILD WORK EXPERIENCE
+===================================================== */
+
+function buildAtsWorkExperience() {
+
+    const role =
+        atsValue(
+            "atsExperienceRole"
+        );
+
+    const company =
+        atsValue(
+            "atsExperienceCompany"
+        );
+
+    const duration =
+        atsValue(
+            "atsExperienceDuration"
+        );
+
+    const location =
+        atsValue(
+            "atsExperienceLocation"
+        );
+
+    const details =
+        atsValue(
+            "atsWorkExperience"
+        );
+
+
+    if (
+        !role &&
+        !company &&
+        !duration &&
+        !location &&
+        !details
+    ) {
+
+        return "";
+
+    }
+
+
+    return [
+        role,
+        company,
+        duration,
+        location,
+        details
+    ].join("\n");
+
+}
+
+
+
+/* =====================================================
+   BUILD INTERNSHIP
+===================================================== */
+
+function buildAtsInternship() {
+
+    const title =
+        atsValue(
+            "atsInternshipTitle"
+        );
+
+    const company =
+        atsValue(
+            "atsInternshipCompany"
+        );
+
+    const duration =
+        atsValue(
+            "atsInternshipDuration"
+        );
+
+    const location =
+        atsValue(
+            "atsInternshipLocation"
+        );
+
+    const details =
+        atsValue(
+            "atsInternships"
+        );
+
+
+    if (
+        !title &&
+        !company &&
+        !duration &&
+        !location &&
+        !details
+    ) {
+
+        return "";
+
+    }
+
+
+    return [
+        title,
+        company,
+        duration,
+        location,
+        details
+    ].join("\n");
+
+}
+
+
+
+/* =====================================================
+   SAVE ATS RESUME
+===================================================== */
+
+async function saveAtsResume(
+    showMessageAfter = true
+) {
+
+    const userId =
+        localStorage.getItem(
+            "careerpilot_user_id"
+        );
+
+
+    if (!userId) {
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
+
+    const data =
+        collectAtsResumeData();
+
+
+    if (
+        !data.full_name
+    ) {
+
+        showAtsMessage(
+            "Please enter your full name before saving the resume.",
+            "error"
+        );
+
+        document
+            .getElementById(
+                "atsFullName"
+            )
+            .focus();
+
+        return false;
+
+    }
+
+
+    atsSaveBtn.disabled =
+        true;
+
+
+    atsSavedStatus.textContent =
+        "Saving...";
+
+
+    hideAtsMessage();
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${ATS_API_URL}/resume/template`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(data)
+                }
+            );
+
+
+        const resultData =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                resultData.detail ||
+                resultData.message ||
+                "Unable to save resume."
+            );
+
+        }
+
+
+        atsSavedStatus.textContent =
+            "Saved to CareerPilot";
+
+
+        if (showMessageAfter) {
+
+            showAtsMessage(
+                "Your ATS resume has been saved successfully to the database.",
+                "success"
+            );
+
+        }
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        atsSavedStatus.textContent =
+            "Save failed";
+
+
+        showAtsMessage(
+            error.message ||
+            "Unable to save your resume.",
+            "error"
+        );
+
+
+        console.error(
+            "ATS save error:",
+            error
+        );
+
+
+        return false;
+
+    }
+
+    finally {
+
+        atsSaveBtn.disabled =
+            false;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   SAVE BUTTON
+===================================================== */
+
+atsSaveBtn.addEventListener(
+    "click",
+    async function () {
+
+        await saveAtsResume(true);
+
+    }
+);
+
+
+
+/* =====================================================
+   LOAD ATS RESUME
+===================================================== */
+
+async function loadAtsResume() {
+
+    const userId =
+        localStorage.getItem(
+            "careerpilot_user_id"
+        );
+
+
+    if (!userId) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${ATS_API_URL}/resume/template/${encodeURIComponent(userId)}`
+            );
+
+
+        if (!response.ok) {
+
+            console.warn(
+                "ATS resume could not be loaded."
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.success ||
+            !data.template
+        ) {
+
+            return;
+
+        }
+
+
+        const template =
+            data.template;
+
+
+        atsSetValue(
+            "atsFullName",
+            template.full_name
+        );
+
+
+        atsSetValue(
+            "atsProfessionalTitle",
+            template.professional_title
+        );
+
+
+        atsSetValue(
+            "atsEmail",
+            template.email
+        );
+
+
+        atsSetValue(
+            "atsPhone",
+            template.phone
+        );
+
+
+        atsSetValue(
+            "atsLocation",
+            template.location
+        );
+
+
+        atsSetValue(
+            "atsLinkedin",
+            template.linkedin
+        );
+
+
+        atsSetValue(
+            "atsGithub",
+            template.github
+        );
+
+
+        atsSetValue(
+            "atsSummary",
+            template.summary
+        );
+
+
+        atsSetValue(
+            "atsEducation",
+            template.education
+        );
+
+
+        atsSetValue(
+            "atsSkills",
+            template.skills
+        );
+
+
+        atsSetValue(
+            "atsProjects",
+            template.projects
+        );
+
+
+        atsSetValue(
+            "atsCertifications",
+            template.certifications
+        );
+
+
+        const fresher =
+            Number(
+                template.is_fresher
+            ) === 1;
+
+
+        if (fresher) {
+
+            atsExperienceNo.checked =
+                true;
+
+            atsExperienceYes.checked =
+                false;
+
+        }
+
+        else {
+
+            atsExperienceYes.checked =
+                true;
+
+            atsExperienceNo.checked =
+                false;
+
+        }
+
+
+        updateAtsExperienceVisibility();
+
+
+        parseAtsWorkExperience(
+            template.work_experience
+        );
+
+
+        parseAtsInternship(
+            template.internships
+        );
+
+
+        atsSavedStatus.textContent =
+            "Saved resume loaded";
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "ATS load error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   PARSE WORK EXPERIENCE
+===================================================== */
+
+function parseAtsWorkExperience(
+    value
+) {
+
+    if (!value) {
+
+        atsSetValue(
+            "atsExperienceRole",
+            ""
+        );
+
+        atsSetValue(
+            "atsExperienceCompany",
+            ""
+        );
+
+        atsSetValue(
+            "atsExperienceDuration",
+            ""
+        );
+
+        atsSetValue(
+            "atsExperienceLocation",
+            ""
+        );
+
+        atsSetValue(
+            "atsWorkExperience",
+            ""
+        );
+
+        return;
+
+    }
+
+
+    const lines =
+        value.split("\n");
+
+
+    atsSetValue(
+        "atsExperienceRole",
+        lines[0] || ""
+    );
+
+
+    atsSetValue(
+        "atsExperienceCompany",
+        lines[1] || ""
+    );
+
+
+    atsSetValue(
+        "atsExperienceDuration",
+        lines[2] || ""
+    );
+
+
+    atsSetValue(
+        "atsExperienceLocation",
+        lines[3] || ""
+    );
+
+
+    atsSetValue(
+        "atsWorkExperience",
+        lines.slice(4).join("\n")
+    );
+
+}
+
+
+
+/* =====================================================
+   PARSE INTERNSHIP
+===================================================== */
+
+function parseAtsInternship(
+    value
+) {
+
+    if (!value) {
+
+        atsSetValue(
+            "atsInternshipTitle",
+            ""
+        );
+
+        atsSetValue(
+            "atsInternshipCompany",
+            ""
+        );
+
+        atsSetValue(
+            "atsInternshipDuration",
+            ""
+        );
+
+        atsSetValue(
+            "atsInternshipLocation",
+            ""
+        );
+
+        atsSetValue(
+            "atsInternships",
+            ""
+        );
+
+        return;
+
+    }
+
+
+    const lines =
+        value.split("\n");
+
+
+    atsSetValue(
+        "atsInternshipTitle",
+        lines[0] || ""
+    );
+
+
+    atsSetValue(
+        "atsInternshipCompany",
+        lines[1] || ""
+    );
+
+
+    atsSetValue(
+        "atsInternshipDuration",
+        lines[2] || ""
+    );
+
+
+    atsSetValue(
+        "atsInternshipLocation",
+        lines[3] || ""
+    );
+
+
+    atsSetValue(
+        "atsInternships",
+        lines.slice(4).join("\n")
+    );
+
+}
+
+
+
+/* =====================================================
+   PREVIEW
+===================================================== */
+
+atsPreviewBtn.addEventListener(
+    "click",
+    function () {
+
+        renderAtsPreview();
+
+    }
+);
+
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeAtsHtml(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* =====================================================
+   CONTACT LINE
+===================================================== */
+
+function buildAtsContactLine(
+    data
+) {
+
+    const parts = [];
+
+
+    if (data.location) {
+
+        parts.push(
+            data.location
+        );
+
+    }
+
+
+    if (data.phone) {
+
+        parts.push(
+            data.phone
+        );
+
+    }
+
+
+    if (data.email) {
+
+        parts.push(
+            data.email
+        );
+
+    }
+
+
+    if (data.linkedin) {
+
+        parts.push(
+            data.linkedin
+        );
+
+    }
+
+
+    if (data.github) {
+
+        parts.push(
+            data.github
+        );
+
+    }
+
+
+    return parts.join(
+        " | "
+    );
+
+}
+
+
+
+/* =====================================================
+   PAPER SECTION
+===================================================== */
+
+function buildAtsPaperSection(
+    title,
+    content
+) {
+
+    if (!content) {
+
+        return "";
+
+    }
+
+
+    return `
+
+        <div class="ats-paper-section">
+
+            <h4>
+                ${escapeAtsHtml(title)}
+            </h4>
+
+            <div class="paper-content">
+                ${escapeAtsHtml(content)}
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   WORK EXPERIENCE PREVIEW
+===================================================== */
+
+function buildAtsExperiencePreview(
+    value
+) {
+
+    if (!value) {
+
+        return "";
+
+    }
+
+
+    const lines =
+        value.split("\n");
+
+
+    const role =
+        lines[0] || "";
+
+
+    const company =
+        lines[1] || "";
+
+
+    const duration =
+        lines[2] || "";
+
+
+    const location =
+        lines[3] || "";
+
+
+    const details =
+        lines.slice(4).join("\n");
+
+
+    return `
+
+        <div class="ats-paper-section">
+
+            <h4>
+                Work Experience
+            </h4>
+
+            <div class="ats-paper-experience">
+
+                <strong>
+                    ${escapeAtsHtml(role)}
+                </strong>
+
+                <span>
+                    ${escapeAtsHtml(company)}
+                    ${company && duration ? " | " : ""}
+                    ${escapeAtsHtml(duration)}
+                    ${duration && location ? " | " : ""}
+                    ${escapeAtsHtml(location)}
+                </span>
+
+                <div>
+                    ${escapeAtsHtml(details)}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   INTERNSHIP PREVIEW
+===================================================== */
+
+function buildAtsInternshipPreview(
+    value
+) {
+
+    if (!value) {
+
+        return "";
+
+    }
+
+
+    const lines =
+        value.split("\n");
+
+
+    const title =
+        lines[0] || "";
+
+
+    const company =
+        lines[1] || "";
+
+
+    const duration =
+        lines[2] || "";
+
+
+    const location =
+        lines[3] || "";
+
+
+    const details =
+        lines.slice(4).join("\n");
+
+
+    return `
+
+        <div class="ats-paper-section">
+
+            <h4>
+                Internships
+            </h4>
+
+            <div class="ats-paper-experience">
+
+                <strong>
+                    ${escapeAtsHtml(title)}
+                </strong>
+
+                <span>
+                    ${escapeAtsHtml(company)}
+                    ${company && duration ? " | " : ""}
+                    ${escapeAtsHtml(duration)}
+                    ${duration && location ? " | " : ""}
+                    ${escapeAtsHtml(location)}
+                </span>
+
+                <div>
+                    ${escapeAtsHtml(details)}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =====================================================
+   RENDER ATS PREVIEW
+===================================================== */
+
+function renderAtsPreview() {
+
+    const data =
+        collectAtsResumeData();
+
+
+    if (!data.full_name) {
+
+        showAtsMessage(
+            "Please enter your full name before previewing your resume.",
+            "error"
+        );
+
+        document
+            .getElementById(
+                "atsFullName"
+            )
+            .focus();
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <h1 class="ats-paper-name">
+            ${escapeAtsHtml(data.full_name)}
+        </h1>
+
+    `;
+
+
+    if (data.professional_title) {
+
+        html += `
+
+            <div class="ats-paper-title">
+                ${escapeAtsHtml(data.professional_title)}
+            </div>
+
+        `;
+
+    }
+
+
+    const contact =
+        buildAtsContactLine(
+            data
+        );
+
+
+    if (contact) {
+
+        html += `
+
+            <div class="ats-paper-contact">
+                ${escapeAtsHtml(contact)}
+            </div>
+
+        `;
+
+    }
+
+
+    if (data.summary) {
+
+        html +=
+            buildAtsPaperSection(
+                "Professional Summary",
+                data.summary
+            );
+
+    }
+
+
+    if (data.education) {
+
+        html +=
+            buildAtsPaperSection(
+                "Education",
+                data.education
+            );
+
+    }
+
+
+    if (data.skills) {
+
+        html +=
+            buildAtsPaperSection(
+                "Technical Skills",
+                data.skills
+            );
+
+    }
+
+
+    if (
+        !data.is_fresher &&
+        data.work_experience
+    ) {
+
+        html +=
+            buildAtsExperiencePreview(
+                data.work_experience
+            );
+
+    }
+
+
+    if (data.internships) {
+
+        html +=
+            buildAtsInternshipPreview(
+                data.internships
+            );
+
+    }
+
+
+    if (data.projects) {
+
+        html +=
+            buildAtsPaperSection(
+                "Projects",
+                data.projects
+            );
+
+    }
+
+
+    if (data.certifications) {
+
+        html +=
+            buildAtsPaperSection(
+                "Certifications",
+                data.certifications
+            );
+
+    }
+
+
+    atsResumePaper.innerHTML =
+        html;
+
+
+    atsPreview.classList.add(
+        "show"
+    );
+
+
+    atsPreview.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+
+/* =====================================================
+   GENERATE ATS PDF
+===================================================== */
+
+atsPdfBtn.addEventListener(
+    "click",
+    async function () {
+
+        const data =
+            collectAtsResumeData();
+
+
+        if (!data.full_name) {
+
+            showAtsMessage(
+                "Please enter your full name before generating the PDF.",
+                "error"
+            );
+
+            document
+                .getElementById(
+                    "atsFullName"
+                )
+                .focus();
+
+            return;
+
+        }
+
+
+        /*
+           Save latest version first.
+        */
+
+        const saved =
+            await saveAtsResume(
+                false
+            );
+
+
+        if (!saved) {
+
+            return;
+
+        }
+
+
+        if (
+            !window.jspdf ||
+            !window.jspdf.jsPDF
+        ) {
+
+            showAtsMessage(
+                "PDF generator could not be loaded. Please check your internet connection and try again.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        atsPdfBtn.disabled =
+            true;
+
+
+        atsSavedStatus.textContent =
+            "Generating PDF...";
+
+
+        hideAtsMessage();
+
+
+        try {
+
+            generateAtsPdf(
+                data
+            );
+
+
+            atsSavedStatus.textContent =
+                "PDF generated";
+
+
+            showAtsMessage(
+                "Your ATS-friendly resume PDF has been generated successfully.",
+                "success"
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "ATS PDF error:",
+                error
+            );
+
+
+            showAtsMessage(
+                "Unable to generate the PDF. Please try again.",
+                "error"
+            );
+
+
+            atsSavedStatus.textContent =
+                "PDF generation failed";
+
+        }
+
+        finally {
+
+            atsPdfBtn.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   PDF TEXT WRAPPING
+===================================================== */
+
+function atsSplitText(
+    doc,
+    text,
+    maxWidth
+) {
+
+    if (!text) {
+
+        return [];
+
+    }
+
+
+    return doc.splitTextToSize(
+        String(text),
+        maxWidth
+    );
+
+}
+
+
+
+/* =====================================================
+   ADD PDF SECTION
+===================================================== */
+
+function atsAddPdfSection(
+    doc,
+    title,
+    content,
+    state
+) {
+
+    if (!content) {
+
+        return;
+
+    }
+
+
+    const left =
+        state.left;
+
+
+    const width =
+        state.width;
+
+
+    if (
+        state.y >
+        state.bottom - 50
+    ) {
+
+        doc.addPage();
+
+        state.y =
+            state.top;
+
+    }
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+
+    doc.setFontSize(
+        10
+    );
+
+
+    doc.setTextColor(
+        17,
+        24,
+        39
+    );
+
+
+    doc.text(
+        title.toUpperCase(),
+        left,
+        state.y
+    );
+
+
+    state.y += 3;
+
+
+    doc.setDrawColor(
+        17,
+        24,
+        39
+    );
+
+
+    doc.setLineWidth(
+        0.3
+    );
+
+
+    doc.line(
+        left,
+        state.y,
+        left + width,
+        state.y
+    );
+
+
+    state.y += 9;
+
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+
+    doc.setFontSize(
+        9
+    );
+
+
+    doc.setTextColor(
+        37,
+        43,
+        53
+    );
+
+
+    const lines =
+        atsSplitText(
+            doc,
+            content,
+            width
+        );
+
+
+    lines.forEach(
+        line => {
+
+            if (
+                state.y >
+                state.bottom - 15
+            ) {
+
+                doc.addPage();
+
+                state.y =
+                    state.top;
+
+            }
+
+
+            doc.text(
+                line,
+                left,
+                state.y
+            );
+
+
+            state.y += 4.7;
+
+        }
+    );
+
+
+    state.y += 7;
+
+}
+
+
+
+/* =====================================================
+   ADD PDF EXPERIENCE
+===================================================== */
+
+function atsAddPdfExperience(
+    doc,
+    title,
+    value,
+    state
+) {
+
+    if (!value) {
+
+        return;
+
+    }
+
+
+    const lines =
+        value.split("\n");
+
+
+    const role =
+        lines[0] || "";
+
+
+    const company =
+        lines[1] || "";
+
+
+    const duration =
+        lines[2] || "";
+
+
+    const location =
+        lines[3] || "";
+
+
+    const details =
+        lines.slice(4).join("\n");
+
+
+    if (
+        state.y >
+        state.bottom - 60
+    ) {
+
+        doc.addPage();
+
+        state.y =
+            state.top;
+
+    }
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+
+    doc.setFontSize(
+        10
+    );
+
+
+    doc.setTextColor(
+        17,
+        24,
+        39
+    );
+
+
+    doc.text(
+        title.toUpperCase(),
+        state.left,
+        state.y
+    );
+
+
+    state.y += 3;
+
+
+    doc.line(
+        state.left,
+        state.y,
+        state.left + state.width,
+        state.y
+    );
+
+
+    state.y += 9;
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+
+    doc.setFontSize(
+        9
+    );
+
+
+    doc.text(
+        role,
+        state.left,
+        state.y
+    );
+
+
+    state.y += 5;
+
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+
+    doc.setFontSize(
+        8.5
+    );
+
+
+    let meta =
+        company;
+
+
+    if (
+        duration
+    ) {
+
+        meta +=
+            (meta ? " | " : "") +
+            duration;
+
+    }
+
+
+    if (
+        location
+    ) {
+
+        meta +=
+            (meta ? " | " : "") +
+            location;
+
+    }
+
+
+    if (meta) {
+
+        doc.text(
+            meta,
+            state.left,
+            state.y
+        );
+
+
+        state.y += 5;
+
+    }
+
+
+    if (details) {
+
+        doc.setFontSize(
+            9
+        );
+
+
+        const detailLines =
+            atsSplitText(
+                doc,
+                details,
+                state.width
+            );
+
+
+        detailLines.forEach(
+            line => {
+
+                if (
+                    state.y >
+                    state.bottom - 15
+                ) {
+
+                    doc.addPage();
+
+                    state.y =
+                        state.top;
+
+                }
+
+
+                doc.text(
+                    line,
+                    state.left,
+                    state.y
+                );
+
+
+                state.y += 4.7;
+
+            }
+        );
+
+    }
+
+
+    state.y += 7;
+
+}
+
+
+
+/* =====================================================
+   GENERATE PDF
+===================================================== */
+
+function generateAtsPdf(
+    data
+) {
+
+    const {
+        jsPDF
+    } =
+        window.jspdf;
+
+
+    const doc =
+        new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+
+    const pageWidth =
+        doc.internal.pageSize.getWidth();
+
+
+    const pageHeight =
+        doc.internal.pageSize.getHeight();
+
+
+    const left =
+        18;
+
+
+    const right =
+        18;
+
+
+    const width =
+        pageWidth -
+        left -
+        right;
+
+
+    const state = {
+
+        left: left,
+
+        width: width,
+
+        y: 22,
+
+        top: 20,
+
+        bottom:
+            pageHeight - 18
+
+    };
+
+
+    /*
+       NAME
+    */
+
+    doc.setTextColor(
+        17,
+        24,
+        39
+    );
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+
+    doc.setFontSize(
+        20
+    );
+
+
+    doc.text(
+        data.full_name,
+        pageWidth / 2,
+        state.y,
+        {
+            align: "center"
+        }
+    );
+
+
+    state.y += 7;
+
+
+    /*
+       PROFESSIONAL TITLE
+    */
+
+    if (
+        data.professional_title
+    ) {
+
+        doc.setFont(
+            "helvetica",
+            "normal"
+        );
+
+
+        doc.setFontSize(
+            10
+        );
+
+
+        doc.setTextColor(
+            55,
+            65,
+            81
+        );
+
+
+        doc.text(
+            data.professional_title,
+            pageWidth / 2,
+            state.y,
+            {
+                align: "center"
+            }
+        );
+
+
+        state.y += 6;
+
+    }
+
+
+    /*
+       CONTACT
+    */
+
+    const contactParts = [];
+
+
+    if (
+        data.location
+    ) {
+
+        contactParts.push(
+            data.location
+        );
+
+    }
+
+
+    if (
+        data.phone
+    ) {
+
+        contactParts.push(
+            data.phone
+        );
+
+    }
+
+
+    if (
+        data.email
+    ) {
+
+        contactParts.push(
+            data.email
+        );
+
+    }
+
+
+    if (
+        data.linkedin
+    ) {
+
+        contactParts.push(
+            data.linkedin
+        );
+
+    }
+
+
+    if (
+        data.github
+    ) {
+
+        contactParts.push(
+            data.github
+        );
+
+    }
+
+
+    if (
+        contactParts.length
+    ) {
+
+        doc.setFont(
+            "helvetica",
+            "normal"
+        );
+
+
+        doc.setFontSize(
+            8
+        );
+
+
+        doc.setTextColor(
+            75,
+            85,
+            99
+        );
+
+
+        const contactText =
+            contactParts.join(
+                " | "
+            );
+
+
+        const contactLines =
+            atsSplitText(
+                doc,
+                contactText,
+                width
+            );
+
+
+        contactLines.forEach(
+            line => {
+
+                doc.text(
+                    line,
+                    pageWidth / 2,
+                    state.y,
+                    {
+                        align: "center"
+                    }
+                );
+
+
+                state.y += 4;
+
+            }
+        );
+
+
+        state.y += 7;
+
+    }
+
+
+    /*
+       SUMMARY
+    */
+
+    atsAddPdfSection(
+        doc,
+        "Professional Summary",
+        data.summary,
+        state
+    );
+
+
+    /*
+       EDUCATION
+    */
+
+    atsAddPdfSection(
+        doc,
+        "Education",
+        data.education,
+        state
+    );
+
+
+    /*
+       SKILLS
+    */
+
+    atsAddPdfSection(
+        doc,
+        "Technical Skills",
+        data.skills,
+        state
+    );
+
+
+    /*
+       EXPERIENCE
+       ONLY IF NOT FRESHER
+    */
+
+    if (
+        !data.is_fresher &&
+        data.work_experience
+    ) {
+
+        atsAddPdfExperience(
+            doc,
+            "Work Experience",
+            data.work_experience,
+            state
+        );
+
+    }
+
+
+    /*
+       INTERNSHIPS
+    */
+
+    if (
+        data.internships
+    ) {
+
+        atsAddPdfExperience(
+            doc,
+            "Internships",
+            data.internships,
+            state
+        );
+
+    }
+
+
+    /*
+       PROJECTS
+    */
+
+    atsAddPdfSection(
+        doc,
+        "Projects",
+        data.projects,
+        state
+    );
+
+
+    /*
+       CERTIFICATIONS
+    */
+
+    atsAddPdfSection(
+        doc,
+        "Certifications",
+        data.certifications,
+        state
+    );
+
+
+    /*
+       SAVE PDF
+    */
+
+    const safeName =
+        data.full_name
+            .replace(
+                /[^a-z0-9]+/gi,
+                "_"
+            )
+            .replace(
+                /^_+|_+$/g,
+                ""
+            ) ||
+        "CareerPilot_Resume";
+
+
+    const filename =
+        safeName +
+        "_ATS_Resume.pdf";
+
+
+    doc.save(
+        filename
+    );
+
+
+    /*
+       ALSO CREATE A FILE OBJECT
+       FOR THE EXISTING RESUME ANALYZER
+    */
+
+    const pdfBlob =
+        doc.output(
+            "blob"
+        );
+
+
+    const generatedFile =
+        new File(
+            [
+                pdfBlob
+            ],
+            filename,
+            {
+                type:
+                    "application/pdf"
+            }
+        );
+
+
+    try {
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        dataTransfer.items.add(
+            generatedFile
+        );
+
+
+        resumeInput.files =
+            dataTransfer.files;
+
+
+        fileName.textContent =
+            filename;
+
+
+        validation.className =
+            "validation success";
+
+
+        validation.style.display =
+            "block";
+
+
+        validation.innerHTML = `
+
+            <strong>
+                ATS Resume PDF ready ✓
+            </strong>
+
+            Your generated resume is now selected in the Resume Analyzer.
+            Click "Analyze Resume" above to analyze it.
+
+        `;
+
+
+        analyzeBtn.style.display =
+            "block";
+
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not attach generated PDF to analyzer:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   LOAD SAVED ATS RESUME WHEN PAGE OPENS
+===================================================== */
+
+loadAtsResume();
+
+
+/* =====================================================
+   DISPLAY LOGGED-IN USER
+===================================================== */
+
+const API_URL = "";
+
+const userNameElement = document.getElementById("userFullName");
+const userAvatarElement = document.getElementById("userAvatar");
+
+let currentUserName =
+    localStorage.getItem("careerpilot_name") || "User";
+
+const currentUserId =
+    localStorage.getItem("careerpilot_user_id");
+
+function displayLoggedInUser(name) {
+    const fullName = (name || "User").trim();
+
+    userNameElement.textContent = fullName;
+
+    const initials = fullName
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("");
+
+    userAvatarElement.textContent = initials || "U";
+}
+
+displayLoggedInUser(currentUserName);
+
+async function loadLoggedInUser() {
+    if (!currentUserId) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${API_URL}/users/${currentUserId}`
+        );
+
+        if (!response.ok) {
+            return;
+        }
+
+        const user = await response.json();
+
+        if (user.name) {
+            currentUserName = user.name;
+
+            localStorage.setItem(
+                "careerpilot_name",
+                currentUserName
+            );
+
+            displayLoggedInUser(currentUserName);
+        }
+    } catch (error) {
+        console.error("Unable to load user details:", error);
+    }
+}
+
+loadLoggedInUser();
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            localStorage.removeItem(
+                "careerpilot_logged_in"
+            );
+
+
+            localStorage.removeItem(
+                "careerpilot_user_id"
+            );
+
+
+            localStorage.removeItem(
+                "careerpilot_name"
+            );
+
+
+            localStorage.removeItem(
+                "careerpilot_email"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+
+
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
+
+const loggedIn =
+    localStorage.getItem(
+        "careerpilot_logged_in"
+    );
+
+
+if (
+    loggedIn !== "true"
+) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+</script>
+
+
+</body>
+</html>

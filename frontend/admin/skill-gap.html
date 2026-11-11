@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Skill Gap Analyzer</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>Skill Gap Analyzer</h1>
+                <div class="subtitle">Manage career roles and see student skill gap analyses</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            <button class="secondary" type="button" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Career Roles</h2>
+                <div class="subtitle" style="margin-top:7px">Roles are used by Skill Gap, Roadmap and Job Matching. Add a new role or delete one you do not need.</div>
+            </div>
+            <span class="pill" id="roleCount">0 records</span>
+        </div>
+        
+        
+        <div class="form-grid" style="margin-bottom:20px">
+            <div class="field">
+                <label for="roleName">Role name</label>
+                <input id="roleName" type="text" placeholder="Example: Cloud Engineer">
+            </div>
+            <div class="field">
+                <label for="roleDesc">Short description</label>
+                <input id="roleDesc" type="text" placeholder="Example: Builds and manages cloud systems">
+            </div>
+            <div class="field full">
+                <label>Skills required for this role (tick the ones you want)</label>
+                <div class="skill-pick" id="skillPick">Loading skills...</div>
+            </div>
+            <div class="field full">
+                <label for="newSkills">New skills not in the list (optional, separate with commas)</label>
+                <input id="newSkills" type="text" placeholder="Example: Terraform, Kubernetes">
+            </div>
+            <div class="full"><button class="primary" id="addRoleBtn" type="button">+ Add role</button></div>
+        </div>
+        <div id="roles"><div class="empty">Loading...</div></div>
+    </section>
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Skill Gap Analyses</h2>
+                <div class="subtitle" style="margin-top:7px">Every analysis run by students. View the skills or delete a record.</div>
+            </div>
+            <span class="pill" id="count">0 records</span>
+        </div>
+        <div class="toolbar"><input id="search" type="search" placeholder="Search by student, email or career..."></div>
+        <div id="list"><div class="empty">Loading...</div></div>
+    </section>
+
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+let all = [], roles = [], skills = [];
+
+/* ---------- ROLES ---------- */
+function drawRoles() {
+    $("roleCount").textContent = roles.length + " roles";
+    CP.show($("roles"), ["Role", "Description", "Skills required"],
+        roles.map(r => ({ id: r.id, cells: [{ html: '<div class="name">' + CP.esc(r.name) + "</div>" }, CP.short(r.description, 70), r.skill_count] })),
+        { view: id => viewRole(roles.find(r => String(r.id) === id)), del: id => removeRole(roles.find(r => String(r.id) === id)) },
+        { empty: "No career roles yet. Add the first one above." });
+}
+async function viewRole(r) {
+    CP.modal("Role: " + r.name, "Loading...");
+    try {
+        const list = (await CP.get("/admin/roles/" + r.id + "/skills")).skills || [];
+        CP.modal("Role: " + r.name,
+            '<div class="sub-text" style="margin-bottom:14px">' + CP.esc(r.description || "No description") + "</div>" +
+            CP.table(["Skill", "Category", "Importance (0-100)"], list.map(s => ({ cells: [s.name, s.category || "-", s.importance] })),
+                     { noActions: true, empty: "No skills added to this role." }));
+    } catch (e) { CP.modal("Role: " + r.name, CP.esc(e.message)); }
+}
+async function removeRole(r) {
+    if (!confirm("Delete the role \"" + r.name + "\"?\n\nSkill gap analyses and roadmaps that use this role will also be removed.")) return;
+    try { await CP.del("/admin/roles/" + r.id); CP.say("Role deleted.", "ok"); await load(); }
+    catch (e) { CP.say(e.message, "error"); }
+}
+function drawSkillPick() {
+    $("skillPick").innerHTML = skills.length
+        ? skills.map(s => '<label><input type="checkbox" value="' + s.id + '"> ' + CP.esc(s.name) + "</label>").join("")
+        : "No skills found. Type new skills below.";
+}
+$("addRoleBtn").onclick = async () => {
+    const name = $("roleName").value.trim();
+    if (!name) { CP.say("Please type the role name.", "error"); return; }
+    const ids = [...document.querySelectorAll("#skillPick input:checked")].map(i => Number(i.value));
+    const typed = $("newSkills").value.split(",").map(s => s.trim()).filter(Boolean);
+    $("addRoleBtn").disabled = true;
+    try {
+        const role = await CP.post("/admin/roles", { name, description: $("roleDesc").value.trim() });
+        for (const skillName of typed) {
+            const existing = skills.find(s => s.name.toLowerCase() === skillName.toLowerCase());
+            if (existing) { if (!ids.includes(existing.id)) ids.push(existing.id); continue; }
+            const made = await CP.post("/admin/skills", { name: skillName, category: "" });
+            ids.push(made.skill_id);
+        }
+        for (const id of ids) await CP.post("/admin/roles/" + role.role_id + "/skills", { skill_id: id, importance: 70 });
+        $("roleName").value = ""; $("roleDesc").value = ""; $("newSkills").value = "";
+        CP.say("Role \"" + name + "\" added with " + ids.length + " skills.", "ok");
+        await load();
+    } catch (e) { CP.say(e.message, "error"); }
+    $("addRoleBtn").disabled = false;
+};
+
+/* ---------- ANALYSES ---------- */
+function draw(items) {
+    $("count").textContent = items.length + " records";
+    CP.show($("list"), ["Student", "Career", "Match score (out of 100)", "Skills missing", "Date"],
+        items.map(a => ({ id: a.id, cells: [CP.person(a.user_name, a.user_email), a.role_name || "-", a.match_score ?? 0, CP.names(a.skills_missing).length, CP.day(a.analyzed_at)] })),
+        { view: id => view(all.find(a => String(a.id) === id)), del: id => remove(all.find(a => String(a.id) === id)) },
+        { empty: "No analyses found." });
+}
+const run = CP.search("search", () => all, a => [a.user_name, a.user_email, a.role_name].join(" "), draw);
+
+function view(a) {
+    CP.modal("Skill gap: " + (a.user_name || "Student") + " → " + (a.role_name || ""),
+        CP.kv([["Student", a.user_name], ["Career", a.role_name], ["Match score (out of 100)", a.match_score ?? 0], ["Date", a.analyzed_at]]) +
+        '<div class="label" style="margin-top:16px">Skills the student has</div>' + CP.chips(CP.names(a.skills_have), "g") +
+        '<div class="label">Skills the student is missing</div>' + CP.chips(CP.names(a.skills_missing), "r"));
+}
+async function remove(a) {
+    if (!confirm("Delete this analysis of " + a.user_name + "?")) return;
+    try { await CP.del("/admin/dashboard/skill-gaps/" + a.id); CP.say("Analysis deleted.", "ok"); await load(); }
+    catch (e) { CP.say(e.message, "error"); }
+}
+
+async function load() {
+    try {
+        const [r, s, g] = await Promise.all([CP.get("/admin/roles"), CP.get("/admin/skills"), CP.get("/admin/dashboard/skill-gaps")]);
+        roles = r.roles || []; skills = s.skills || []; all = g.analyses || [];
+        CP.stats([["Career roles", roles.length], ["Analyses run", all.length], ["Students analysed", new Set(all.map(a => a.user_id)).size]]);
+        drawRoles(); drawSkillPick(); run();
+    } catch (e) { CP.say("Could not load data: " + e.message, "error"); }
+}
+$("refreshBtn").onclick = load;
+load();
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Job Matching</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>Job Matching</h1>
+                <div class="subtitle">Career roles that students are matched with</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            <button class="secondary" type="button" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Career Roles</h2>
+                <div class="subtitle" style="margin-top:7px">Students are matched against these roles. To add a new role, open the Skill Gap page.</div>
+            </div>
+            <span class="pill" id="count">0 records</span>
+        </div>
+        <div class="toolbar"><input id="search" type="search" placeholder="Search career roles..."></div>
+        <div id="list"><div class="empty">Loading...</div></div>
+    </section>
+
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+let roles = [], students = [];
+function draw(items) {
+    $("count").textContent = items.length + " records";
+    CP.show($("list"), ["Career", "Description", "Skills required", "Students aiming for it"],
+        items.map(r => ({ id: r.id, cells: [{ html: '<div class="name">' + CP.esc(r.name) + "</div>" }, CP.short(r.description, 70), r.skill_count,
+                         students.filter(u => u.target_role === r.name).length] })),
+        { view: id => view(roles.find(r => String(r.id) === id)), del: id => remove(roles.find(r => String(r.id) === id)) },
+        { empty: "No career roles found." });
+}
+const run = CP.search("search", () => roles, r => r.name + " " + (r.description || ""), draw);
+
+async function view(r) {
+    CP.modal("Career: " + r.name, "Loading...");
+    try {
+        const list = (await CP.get("/admin/roles/" + r.id + "/skills")).skills || [];
+        CP.modal("Career: " + r.name,
+            '<div class="sub-text" style="margin-bottom:14px">' + CP.esc(r.description || "No description") + "</div>" +
+            CP.table(["Skill", "Category", "Importance (0-100)"], list.map(s => ({ cells: [s.name, s.category || "-", s.importance] })),
+                     { noActions: true, empty: "No skills added to this role." }));
+    } catch (e) { CP.modal("Career: " + r.name, CP.esc(e.message)); }
+}
+async function remove(r) {
+    if (!confirm("Delete the role \"" + r.name + "\"?\n\nSkill gap analyses and roadmaps that use this role will also be removed.")) return;
+    try { await CP.del("/admin/roles/" + r.id); CP.say("Role deleted.", "ok"); await load(); }
+    catch (e) { CP.say(e.message, "error"); }
+}
+async function load() {
+    try {
+        const [r, u, s] = await Promise.all([CP.get("/admin/roles"), CP.get("/admin/dashboard/users"), CP.get("/admin/dashboard/summary")]);
+        roles = r.roles || []; students = u.users || [];
+        CP.stats([["Career roles", roles.length], ["Skills in the library", s.summary.skills],
+                  ["Students with a target career", students.filter(x => x.target_role).length]]);
+        run();
+    } catch (e) { CP.say("Could not load data: " + e.message, "error"); $("list").innerHTML = ""; }
+}
+$("refreshBtn").onclick = load;
+load();
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

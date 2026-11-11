@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPilot AI | Reports</title>
+<link rel="stylesheet" href="css/admin-ui.css">
+</head>
+<body>
+<div class="container">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>Reports</h1>
+                <div class="subtitle">Simple tables of every module — download CSV files or print them as PDF for your documentation</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="success" type="button" onclick="downloadAll()">⬇ Download all CSV</button><button class="primary" type="button" onclick="window.print()">🖨️ Print / Save as PDF</button><button class="secondary" id="refreshBtn" type="button">↻ Refresh</button>
+            <button class="secondary" type="button" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </header>
+
+    <div id="status" class="status"></div>
+
+    <section class="stats" id="stats"></section>
+
+<div id="reports"><div class="empty">Loading reports...</div></div>
+</div>
+
+<script src="js/admin-common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+const csvStore = {};
+function report(no, title, headers, rows, csvName, csvHeaders, csvRows) {
+    csvStore[no] = [csvName, csvHeaders || headers, csvRows || rows];
+    return '<section class="panel report"><div class="panel-heading"><div><h2>' + no + ". " + CP.esc(title) +
+        '</h2><div class="subtitle" style="margin-top:7px">Total records: ' + rows.length + "</div></div>" +
+        '<button class="success no-print" data-csv="' + no + '" type="button">⬇ Download CSV</button></div>' +
+        CP.table(headers, rows.map(cells => ({ cells })), { noActions: true, empty: "No records yet." }) + "</section>";
+}
+function wireCsv() {
+    document.querySelectorAll("[data-csv]").forEach(b => b.onclick = () => CP.csv(...csvStore[b.dataset.csv]));
+}
+function downloadAll() {
+    Object.keys(csvStore).forEach((k, i) => setTimeout(() => CP.csv(...csvStore[k]), i * 400));
+}
+
+async function load() {
+    $("reports").innerHTML = '<div class="empty">Loading reports...</div>';
+    try {
+        const [sum, usr, res, chat, gaps, maps, roles] = await Promise.all([
+            CP.get("/admin/dashboard/summary"), CP.get("/admin/dashboard/users"), CP.get("/admin/dashboard/resumes"),
+            CP.get("/admin/dashboard/chat-messages"), CP.get("/admin/dashboard/skill-gaps"),
+            CP.get("/admin/dashboard/roadmaps").catch(() => ({ roadmaps: [] })), CP.get("/admin/roles")]);
+        const S = sum.summary, U = usr.users || [], R = res.resumes || [], C = chat.messages || [],
+              G = gaps.analyses || [], M = maps.roadmaps || [], roleList = roles.roles || [];
+
+        CP.stats([["Generated on", new Date().toLocaleDateString()], ["Students", S.users], ["Total records", S.users + S.resumes + S.chat_messages + S.skill_gap_analyses + S.roadmaps]]);
+
+        $("reports").innerHTML = [
+            report(1, "Summary", ["Module", "Total records"], [
+                ["Users", S.users], ["Resume Analyzer", S.resumes], ["AI Coach questions", S.chat_messages],
+                ["Skill Gap analyses", S.skill_gap_analyses], ["Career Roadmaps", S.roadmaps], ["Career roles (Job Matching)", S.career_roles]],
+                "summary-report"),
+            report(2, "Users", ["Name", "Email", "Role", "Target career", "Education", "Joined"],
+                U.map(u => [u.name, u.email, u.role, u.target_role || "-", u.education || "-", CP.day(u.created_at)]),
+                "users-report"),
+            report(3, "Resume Analyzer", ["Student", "File", "Score (out of 100)", "Skills found", "Uploaded"],
+                R.map(r => [r.user_name, r.filename, r.resume_score, (r.skills || []).length, CP.day(r.uploaded_at)]),
+                "resume-report", ["Student", "Email", "File", "Score (out of 100)", "Skills found", "Skills", "Uploaded"],
+                R.map(r => [r.user_name, r.user_email, r.filename, r.resume_score, (r.skills || []).length,
+                            (r.skills || []).map(CP.skillName).filter(Boolean).join("; "), r.uploaded_at])),
+            report(4, "AI Coach", ["Student", "Question", "AI answer", "Date"],
+                C.map(c => [c.user_name || "User", CP.short(c.message, 90), CP.short(c.response, 110), CP.day(c.created_at)]),
+                "ai-coach-report", ["Student", "Email", "Question", "AI answer", "Date"],
+                C.map(c => [c.user_name || "User", c.user_email || "", c.message, c.response, c.created_at])),
+            report(5, "Skill Gap Analyzer", ["Student", "Career", "Match score (out of 100)", "Skills missing", "Date"],
+                G.map(g => [g.user_name, g.role_name, g.match_score ?? 0, CP.names(g.skills_missing).length, CP.day(g.analyzed_at)]),
+                "skill-gap-report", ["Student", "Email", "Career", "Match score (out of 100)", "Skills have", "Skills missing", "Date"],
+                G.map(g => [g.user_name, g.user_email, g.role_name, g.match_score ?? 0, CP.names(g.skills_have).join("; "),
+                            CP.names(g.skills_missing).join("; "), g.analyzed_at])),
+            report(6, "Career Roadmap", ["Student", "Career", "Stages", "Missing skills", "Created"],
+                M.map(m => [m.user_name, m.role_name, m.stage_count, m.missing_count, CP.day(m.created_at)]),
+                "roadmap-report"),
+            report(7, "Job Matching (Career Roles)", ["Career", "Description", "Skills required", "Students aiming for it"],
+                roleList.map(r => [r.name, CP.short(r.description, 70), r.skill_count, U.filter(u => u.target_role === r.name).length]),
+                "job-matching-report", ["Career", "Description", "Skills required", "Students aiming for it"],
+                roleList.map(r => [r.name, r.description || "", r.skill_count, U.filter(u => u.target_role === r.name).length]))
+        ].join("");
+        wireCsv();
+    } catch (e) { CP.say("Could not load reports: " + e.message + " (is the backend running?)", "error"); $("reports").innerHTML = ""; }
+}
+$("refreshBtn").onclick = load;
+load();
+
+</script>
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

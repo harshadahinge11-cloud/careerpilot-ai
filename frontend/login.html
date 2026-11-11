@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | CareerPilot AI</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-glow glow-one"></div>
+    <div class="auth-glow glow-two"></div>
+
+    <a href="index.html" class="auth-logo">
+        <span>CP</span>
+        CareerPilot AI
+    </a>
+
+    <div class="auth-container">
+
+        <div class="auth-visual">
+            <div class="visual-grid"></div>
+
+            <div class="visual-content">
+
+                <div class="ai-badge">
+                    YOUR AI CAREER COMPANION
+                </div>
+
+                <h1>
+                    Your next
+                    <span>career move</span>
+                    starts here.
+                </h1>
+
+                <p>
+                    Continue your journey with intelligent career
+                    insights, skill analysis and personalized guidance.
+                </p>
+
+                <div class="benefit-list">
+
+                    <div class="benefit">
+                        <span>01</span>
+                        <div>
+                            <strong>Career Coach</strong>
+                            <small>Get personalized AI guidance</small>
+                        </div>
+                    </div>
+
+                    <div class="benefit">
+                        <span>02</span>
+                        <div>
+                            <strong>Resume Intelligence</strong>
+                            <small>Improve your professional profile</small>
+                        </div>
+                    </div>
+
+                    <div class="benefit">
+                        <span>03</span>
+                        <div>
+                            <strong>Career Roadmap</strong>
+                            <small>Know exactly what to learn next</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="auth-card">
+
+            <div class="form-header">
+
+                <div class="mobile-logo">CP</div>
+
+                <p class="form-eyebrow">WELCOME BACK</p>
+
+                <h2>Continue your journey</h2>
+
+                <p>
+                    Sign in to access your CareerPilot dashboard.
+                </p>
+
+            </div>
+
+            <form id="loginForm">
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+
+                    <div class="input-wrapper">
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('password', this)"
+                        >
+                            SHOW
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    <span>Sign In</span>
+                    <b>→</b>
+                </button>
+
+            </form>
+
+            <!-- Required by existing auth.js -->
+            <div id="authMessage" class="auth-message"></div>
+
+            <div class="form-divider">
+                <span>NEW TO CAREERPILOT?</span>
+            </div>
+
+            <a href="register.html" class="secondary-button">
+                Create an account
+            </a>
+
+            <p class="security-note">
+                Your career data stays private and secure.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+function togglePassword(id, button) {
+
+    const input = document.getElementById(id);
+
+    if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "HIDE";
+    } else {
+        input.type = "password";
+        button.textContent = "SHOW";
+    }
+}
+</script>
+
+</body>
+</html>
