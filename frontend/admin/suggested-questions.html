@@ -76,7 +76,7 @@
 
 <script>
     const API_URL = "";
-    const ADMIN_KEY = "careerpilot-admin-2026";
+       const ADMIN_KEY = localStorage.getItem("careerpilot_admin_key") || "";
     let editingId = null;
     let questions = [];
 
